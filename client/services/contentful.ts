@@ -117,7 +117,7 @@ export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
 
   try {
     const response = await client.getEntries<PaginaInicioSkeleton>({
-      content_type: "PaginaInicio",
+      content_type: "paginaInicio",
       limit: 1,
       include: 2,
     });
