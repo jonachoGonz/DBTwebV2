@@ -84,7 +84,7 @@ export default function Navbar() {
           <div className="ms-lg-3 mt-3 mt-lg-0">
             <Link
               to="/#booking"
-              className="btn btn-primary w-100 w-lg-auto"
+              className="btn btn-primary w-100"
               onClick={() => setOpen(false)}
             >
               Agendar
