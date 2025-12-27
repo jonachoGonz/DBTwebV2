@@ -1,4 +1,9 @@
-import { createClient, type Asset, type Entry } from "contentful";
+import {
+  createClient,
+  type Asset,
+  type Entry,
+  type EntrySkeletonType,
+} from "contentful";
 import type { LandingService, PaginaInicioContent } from "@/types/contentful";
 
 type PaginaInicioFields = {
@@ -9,11 +14,18 @@ type PaginaInicioFields = {
   bookingUrl?: unknown;
 };
 
+type PaginaInicioSkeleton = EntrySkeletonType<PaginaInicioFields, "PaginaInicio">;
+
 type SeccionServicioFields = {
   titulo?: unknown;
   descripcion?: unknown;
   icono?: unknown;
 };
+
+type SeccionServicioSkeleton = EntrySkeletonType<
+  SeccionServicioFields,
+  "SeccionServicio"
+>;
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0 ? value : undefined;
@@ -49,7 +61,9 @@ export function getContentfulClient() {
   });
 }
 
-export function mapPaginaInicio(entry: Entry<PaginaInicioFields>): PaginaInicioContent {
+export function mapPaginaInicio(
+  entry: Entry<PaginaInicioSkeleton>,
+): PaginaInicioContent {
   return {
     heroTitulo:
       readString(entry.fields.heroTitulo) ??
@@ -64,7 +78,7 @@ export function mapPaginaInicio(entry: Entry<PaginaInicioFields>): PaginaInicioC
 }
 
 export function mapSeccionServicio(
-  entry: Entry<SeccionServicioFields>,
+  entry: Entry<SeccionServicioSkeleton>,
 ): LandingService {
   const iconAsset = entry.fields.icono as Asset | undefined;
   const { url, alt } = readAssetUrl(iconAsset);
@@ -83,26 +97,26 @@ export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
   const client = getContentfulClient();
   if (!client) return null;
 
-  const response = await client.getEntries<PaginaInicioFields>({
+  const response = await client.getEntries<PaginaInicioSkeleton>({
     content_type: "PaginaInicio",
     limit: 1,
     include: 2,
   });
 
   const entry = response.items?.[0];
-  return entry ? mapPaginaInicio(entry as Entry<PaginaInicioFields>) : null;
+  return entry ? mapPaginaInicio(entry) : null;
 }
 
 export async function fetchSeccionServicios(): Promise<LandingService[] | null> {
   const client = getContentfulClient();
   if (!client) return null;
 
-  const response = await client.getEntries<SeccionServicioFields>({
+  const response = await client.getEntries<SeccionServicioSkeleton>({
     content_type: "SeccionServicio",
     order: ["sys.createdAt"],
     include: 2,
   });
 
-  const items = (response.items ?? []) as Entry<SeccionServicioFields>[];
+  const items = (response.items ?? []) as Entry<SeccionServicioSkeleton>[];
   return items.map(mapSeccionServicio);
 }
