@@ -1,3 +1,4 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./global.css";
 
 import { Toaster } from "@/components/ui/toaster";
