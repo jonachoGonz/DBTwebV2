@@ -147,7 +147,7 @@ export async function fetchSeccionServicios(): Promise<
 
   try {
     const response = await client.getEntries<SeccionServicioSkeleton>({
-      content_type: "SeccionServicio",
+      content_type: "seccionServicio",
       order: ["sys.createdAt"],
       include: 2,
     });
