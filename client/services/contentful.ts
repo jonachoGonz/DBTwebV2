@@ -103,16 +103,30 @@ export function mapSeccionServicio(
 
 export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
   const client = getContentfulClient();
-  if (!client) return null;
+  if (!client) {
+    console.warn("[Contentful] No client configured - missing env vars");
+    return null;
+  }
 
-  const response = await client.getEntries<PaginaInicioSkeleton>({
-    content_type: "PaginaInicio",
-    limit: 1,
-    include: 2,
-  });
+  try {
+    const response = await client.getEntries<PaginaInicioSkeleton>({
+      content_type: "PaginaInicio",
+      limit: 1,
+      include: 2,
+    });
 
-  const entry = response.items?.[0];
-  return entry ? mapPaginaInicio(entry) : null;
+    const entry = response.items?.[0];
+    if (!entry) {
+      console.warn("[Contentful] No PaginaInicio entry found");
+      return null;
+    }
+
+    console.log("[Contentful] PaginaInicio fetched successfully", entry);
+    return mapPaginaInicio(entry);
+  } catch (error) {
+    console.error("[Contentful] Error fetching PaginaInicio:", error);
+    throw error;
+  }
 }
 
 export async function fetchSeccionServicios(): Promise<
