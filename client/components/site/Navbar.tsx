@@ -40,7 +40,8 @@ export default function Navbar() {
             style={{
               width: 36,
               height: 36,
-              background: "linear-gradient(135deg, rgb(var(--bs-primary-rgb)), #1e3a8a)",
+              background:
+                "linear-gradient(135deg, rgb(var(--bs-primary-rgb)), #1e3a8a)",
               color: "#fff",
               fontSize: 12,
               letterSpacing: 0.8,

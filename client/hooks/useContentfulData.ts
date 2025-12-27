@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { fallbackLandingContent } from "@/content/fallbackLandingContent";
-import { fetchPaginaInicio, fetchSeccionServicios } from "@/services/contentful";
+import {
+  fetchPaginaInicio,
+  fetchSeccionServicios,
+} from "@/services/contentful";
 import type { LandingContent } from "@/types/contentful";
 
 async function fetchLandingContent(): Promise<LandingContent> {
@@ -16,7 +19,9 @@ async function fetchLandingContent(): Promise<LandingContent> {
   return {
     ...base,
     services:
-      services && services.length > 0 ? services : fallbackLandingContent.services,
+      services && services.length > 0
+        ? services
+        : fallbackLandingContent.services,
   };
 }
 

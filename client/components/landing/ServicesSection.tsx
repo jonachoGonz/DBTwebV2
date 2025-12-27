@@ -7,7 +7,8 @@ type ServicesSectionProps = {
 };
 
 function FallbackIcon({ index }: { index: number }) {
-  const Icon = index % 3 === 0 ? HeartHandshake : index % 3 === 1 ? Users : Sparkles;
+  const Icon =
+    index % 3 === 0 ? HeartHandshake : index % 3 === 1 ? Users : Sparkles;
 
   return (
     <span
@@ -53,7 +54,10 @@ function ServiceIcon({
   );
 }
 
-export default function ServicesSection({ id, services }: ServicesSectionProps) {
+export default function ServicesSection({
+  id,
+  services,
+}: ServicesSectionProps) {
   return (
     <section id={id} className="py-5 bg-white">
       <div className="container py-lg-4">
@@ -74,7 +78,10 @@ export default function ServicesSection({ id, services }: ServicesSectionProps) 
 
         <div className="row g-4">
           {services.map((service, index) => (
-            <div className="col-12 col-md-6 col-lg-4" key={`${service.titulo}-${index}`}>
+            <div
+              className="col-12 col-md-6 col-lg-4"
+              key={`${service.titulo}-${index}`}
+            >
               <div className="card h-100 border-0 shadow-sm">
                 <div className="card-body p-4">
                   <div className="d-flex align-items-start gap-3 mb-3">

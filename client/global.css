@@ -45,8 +45,9 @@
    * Bootstrap variable overrides (no Sass required)
    * We rely on Bootstrap for layout/components, and use this section to brand it.
    */
-  --bs-body-font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
-    Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --bs-body-font-family:
+    Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
   --bs-body-bg: hsl(var(--background));
   --bs-body-color: hsl(var(--foreground));
 
@@ -83,7 +84,11 @@ code {
 /* Subtle modern button style while still using Bootstrap classes */
 .btn.btn-primary {
   border: 0;
-  background-image: linear-gradient(135deg, rgb(var(--bs-primary-rgb)), #1e3a8a);
+  background-image: linear-gradient(
+    135deg,
+    rgb(var(--bs-primary-rgb)),
+    #1e3a8a
+  );
   box-shadow: 0 10px 30px rgba(24, 123, 112, 0.25);
 }
 

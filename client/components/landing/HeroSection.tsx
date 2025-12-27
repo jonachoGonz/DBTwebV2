@@ -50,7 +50,10 @@ export default function HeroSection({
               <Link to="/#booking" className="btn btn-primary btn-lg">
                 {ctaTexto}
               </Link>
-              <Link to="/#services" className="btn btn-outline-secondary btn-lg">
+              <Link
+                to="/#services"
+                className="btn btn-outline-secondary btn-lg"
+              >
                 Ver servicios
               </Link>
             </div>
@@ -90,7 +93,9 @@ export default function HeroSection({
                   </div>
                   <div className="col-12">
                     <div className="p-3 rounded-3 border bg-light">
-                      <div className="fw-semibold">Efectividad interpersonal</div>
+                      <div className="fw-semibold">
+                        Efectividad interpersonal
+                      </div>
                       <div className="text-secondary small">
                         Límites sanos, comunicación y autocuidado.
                       </div>

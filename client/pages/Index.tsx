@@ -5,7 +5,11 @@ import { fallbackLandingContent } from "@/content/fallbackLandingContent";
 import { useContentfulData } from "@/hooks/useContentfulData";
 
 export default function Index() {
-  const { data = fallbackLandingContent, isLoading, isError } = useContentfulData();
+  const {
+    data = fallbackLandingContent,
+    isLoading,
+    isError,
+  } = useContentfulData();
 
   return (
     <div>

@@ -22,16 +22,23 @@ export default function Footer() {
               <span>DBT web v1</span>
             </div>
             <div className="text-secondary small mt-2">
-              © {year} • Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              © {year} • Lorem ipsum dolor sit amet, consectetur adipiscing
+              elit.
             </div>
           </div>
 
           <div className="col-12 col-md-auto">
             <div className="d-flex flex-wrap gap-3 justify-content-md-end">
-              <Link className="link-secondary text-decoration-none" to="/#services">
+              <Link
+                className="link-secondary text-decoration-none"
+                to="/#services"
+              >
                 Servicios
               </Link>
-              <Link className="link-secondary text-decoration-none" to="/#booking">
+              <Link
+                className="link-secondary text-decoration-none"
+                to="/#booking"
+              >
                 Reserva
               </Link>
               <a

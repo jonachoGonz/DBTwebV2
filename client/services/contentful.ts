@@ -14,7 +14,10 @@ type PaginaInicioFields = {
   bookingUrl?: unknown;
 };
 
-type PaginaInicioSkeleton = EntrySkeletonType<PaginaInicioFields, "PaginaInicio">;
+type PaginaInicioSkeleton = EntrySkeletonType<
+  PaginaInicioFields,
+  "PaginaInicio"
+>;
 
 type SeccionServicioFields = {
   titulo?: unknown;
@@ -28,10 +31,15 @@ type SeccionServicioSkeleton = EntrySkeletonType<
 >;
 
 function readString(value: unknown): string | undefined {
-  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
+  return typeof value === "string" && value.trim().length > 0
+    ? value
+    : undefined;
 }
 
-function readAssetUrl(asset: Asset | undefined): { url?: string; alt?: string } {
+function readAssetUrl(asset: Asset | undefined): {
+  url?: string;
+  alt?: string;
+} {
   const fileUrl = asset?.fields?.file && (asset.fields.file as any)?.url;
   const title = readString(asset?.fields?.title);
 
@@ -107,7 +115,9 @@ export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
   return entry ? mapPaginaInicio(entry) : null;
 }
 
-export async function fetchSeccionServicios(): Promise<LandingService[] | null> {
+export async function fetchSeccionServicios(): Promise<
+  LandingService[] | null
+> {
   const client = getContentfulClient();
   if (!client) return null;
 
