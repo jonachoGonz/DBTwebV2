@@ -4,6 +4,9 @@ export default {
   darkMode: ["class"],
   content: ["./client/**/*.{ts,tsx}"],
   prefix: "",
+  corePlugins: {
+    preflight: false,
+  },
   theme: {
     container: {
       center: true,
