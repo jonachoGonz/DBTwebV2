@@ -60,8 +60,15 @@ export function hasContentfulConfig(): boolean {
 }
 
 export function getContentfulClient() {
-  if (!hasContentfulConfig()) return null;
+  if (!hasContentfulConfig()) {
+    console.warn("[Contentful] Config missing:", {
+      spaceId: import.meta.env.VITE_CONTENTFUL_SPACE_ID,
+      token: import.meta.env.VITE_CONTENTFUL_DELIVERY_TOKEN ? "***" : "undefined",
+    });
+    return null;
+  }
 
+  console.log("[Contentful] Creating client with space:", import.meta.env.VITE_CONTENTFUL_SPACE_ID);
   return createClient({
     space: import.meta.env.VITE_CONTENTFUL_SPACE_ID,
     accessToken: import.meta.env.VITE_CONTENTFUL_DELIVERY_TOKEN,
