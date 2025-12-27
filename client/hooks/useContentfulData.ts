@@ -30,6 +30,8 @@ export function useContentfulData() {
     queryKey: ["contentful", "landing"],
     queryFn: fetchLandingContent,
     staleTime: 1000 * 60 * 5,
-    retry: 1,
+    gcTime: 1000 * 60, // Cache for 1 minute
+    retry: 3, // Retry up to 3 times
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
   });
 }
