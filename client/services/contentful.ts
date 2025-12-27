@@ -27,7 +27,7 @@ type SeccionServicioFields = {
 
 type SeccionServicioSkeleton = EntrySkeletonType<
   SeccionServicioFields,
-  "SeccionServicio"
+  "seccionServicio"
 >;
 
 function readString(value: unknown): string | undefined {
