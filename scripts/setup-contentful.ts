@@ -165,41 +165,37 @@ async function setupContentful() {
 
     // Single paginaInicio entry
     try {
-      const entries = await environment.getEntries({
-        content_type: paginaInicioId,
+      console.log(`📝 Creating dummy paginaInicio entry...`);
+      const paginaEntry = await environment.createEntry(paginaInicioId, {
+        fields: {
+          heroTitulo: {
+            "en-US":
+              "DBT web v1 — Terapia basada en evidencia, con calma y claridad",
+          },
+          heroSubtitulo: {
+            "en-US":
+              "Un espacio seguro para trabajar habilidades de regulación emocional, tolerancia al malestar y relaciones más sanas. Nuestro enfoque se basa en la Terapia Dialéctica del Comportamiento (DBT).",
+          },
+          ctaTexto: {
+            "en-US": "Agendar primera sesión",
+          },
+          bookingTitulo: {
+            "en-US": "Reserva tu cita",
+          },
+          bookingUrl: {
+            "en-US": "",
+          },
+        },
       });
 
-      if (entries.items.length === 0) {
-        console.log(`📝 Creating dummy paginaInicio entry...`);
-        const paginaEntry = await environment.createEntry(paginaInicioId, {
-          fields: {
-            heroTitulo: {
-              "en-US":
-                "DBT web v1 — Terapia basada en evidencia, con calma y claridad",
-            },
-            heroSubtitulo: {
-              "en-US":
-                "Un espacio seguro para trabajar habilidades de regulación emocional, tolerancia al malestar y relaciones más sanas. Nuestro enfoque se basa en la Terapia Dialéctica del Comportamiento (DBT).",
-            },
-            ctaTexto: {
-              "en-US": "Agendar primera sesión",
-            },
-            bookingTitulo: {
-              "en-US": "Reserva tu cita",
-            },
-            bookingUrl: {
-              "en-US": "",
-            },
-          },
-        });
-
-        await paginaEntry.publish();
-        console.log(`✓ Created and published paginaInicio entry\n`);
+      await paginaEntry.publish();
+      console.log(`✓ Created and published paginaInicio entry\n`);
+    } catch (error: any) {
+      if (error.message?.includes("already exists")) {
+        console.log(`⚠️  paginaInicio entry already exists. Skipping.\n`);
       } else {
-        console.log(`⚠️  paginaInicio entries already exist. Skipping.\n`);
+        console.error(`❌ Error creating paginaInicio entry:`, error.message);
       }
-    } catch (error) {
-      console.error(`❌ Error creating paginaInicio entry:`, error);
     }
 
     // Three seccionServicio entries
