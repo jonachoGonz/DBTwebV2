@@ -80,7 +80,7 @@ export function mapPaginaInicio(
 export function mapSeccionServicio(
   entry: Entry<SeccionServicioSkeleton>,
 ): LandingService {
-  const iconAsset = entry.fields.icono as Asset | undefined;
+  const iconAsset = entry.fields.icono as unknown as Asset | undefined;
   const { url, alt } = readAssetUrl(iconAsset);
 
   return {
