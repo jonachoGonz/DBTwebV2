@@ -37,12 +37,9 @@ export default function Index() {
             <strong>No se pudo cargar el contenido desde Contentful.</strong> Mostrando contenido
             de ejemplo.
             {error && (
-              <details className="mt-2" style={{ fontSize: "0.85rem" }}>
-                <summary style={{ cursor: "pointer" }}>Error details</summary>
-                <pre style={{ marginTop: "0.5rem", whiteSpace: "pre-wrap" }}>
-                  {String(error)}
-                </pre>
-              </details>
+              <pre style={{ marginTop: "0.5rem", whiteSpace: "pre-wrap", fontSize: "0.75rem" }}>
+                {String(error)}
+              </pre>
             )}
           </div>
         </div>
