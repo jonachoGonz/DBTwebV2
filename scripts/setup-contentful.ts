@@ -14,7 +14,7 @@
  *   CONTENTFUL_MANAGEMENT_TOKEN
  */
 
-import { createClient } from "contentful-management";
+import contentfulManagement from "contentful-management";
 
 const SPACE_ID = process.env.CONTENTFUL_SPACE_ID || "i9biw4ut49ej";
 const MANAGEMENT_TOKEN =
