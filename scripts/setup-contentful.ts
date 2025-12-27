@@ -200,58 +200,51 @@ async function setupContentful() {
 
     // Three seccionServicio entries
     try {
-      const entries = await environment.getEntries({
-        content_type: seccionServicioId,
-      });
+      const services = [
+        {
+          titulo: "Terapia DBT individual",
+          descripcion:
+            "Sesiones de terapia individual enfocadas en habilidades DBT. Trabajamos juntos en regulación emocional, tolerancia al malestar, efectividad interpersonal y mindfulness.",
+        },
+        {
+          titulo: "Entrenamiento de habilidades",
+          descripcion:
+            "Módulos estructurados de entrenamiento en las cuatro pilares de DBT: mindfulness, regulación emocional, tolerancia al malestar, y efectividad interpersonal.",
+        },
+        {
+          titulo: "Acompañamiento en crisis",
+          descripcion:
+            "Soporte especializado en momentos de crisis. Incluye planes de seguridad, técnicas de contención emocional, y herramientas de respuesta rápida.",
+        },
+      ];
 
-      if (entries.items.length === 0) {
-        const services = [
+      for (const service of services) {
+        console.log(`📝 Creating service: ${service.titulo}...`);
+        const serviceEntry = await environment.createEntry(
+          seccionServicioId,
           {
-            titulo: "Terapia DBT individual",
-            descripcion:
-              "Sesiones de terapia individual enfocadas en habilidades DBT. Trabajamos juntos en regulación emocional, tolerancia al malestar, efectividad interpersonal y mindfulness.",
-          },
-          {
-            titulo: "Entrenamiento de habilidades",
-            descripcion:
-              "Módulos estructurados de entrenamiento en las cuatro pilares de DBT: mindfulness, regulación emocional, tolerancia al malestar, y efectividad interpersonal.",
-          },
-          {
-            titulo: "Acompañamiento en crisis",
-            descripcion:
-              "Soporte especializado en momentos de crisis. Incluye planes de seguridad, técnicas de contención emocional, y herramientas de respuesta rápida.",
-          },
-        ];
-
-        for (const service of services) {
-          console.log(`📝 Creating service: ${service.titulo}...`);
-          const serviceEntry = await environment.createEntry(
-            seccionServicioId,
-            {
-              fields: {
-                titulo: {
-                  "en-US": service.titulo,
-                },
-                descripcion: {
-                  "en-US": service.descripcion,
-                },
+            fields: {
+              titulo: {
+                "en-US": service.titulo,
+              },
+              descripcion: {
+                "en-US": service.descripcion,
               },
             },
-          );
-
-          await serviceEntry.publish();
-          console.log(`✓ Published: ${service.titulo}`);
-          await sleep(100);
-        }
-
-        console.log();
-      } else {
-        console.log(
-          `⚠️  seccionServicio entries already exist (${entries.items.length}). Skipping.\n`,
+          },
         );
+
+        await serviceEntry.publish();
+        console.log(`✓ Published: ${service.titulo}`);
+        await sleep(100);
       }
-    } catch (error) {
-      console.error(`❌ Error creating seccionServicio entries:`, error);
+
+      console.log();
+    } catch (error: any) {
+      console.error(
+        `❌ Error creating seccionServicio entries:`,
+        error.message || error,
+      );
     }
 
     console.log("✅ Contentful setup complete!\n");
