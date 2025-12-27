@@ -152,10 +152,16 @@ export async function fetchSeccionServicios(): Promise<
   }
 
   try {
-    const response = await client.getEntries<SeccionServicioSkeleton>({
-      content_type: "seccionServicio",
-      include: 2,
-    });
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Contentful API timeout")), 10000)
+    );
+    const response = await Promise.race([
+      client.getEntries<SeccionServicioSkeleton>({
+        content_type: "seccionServicio",
+        include: 2,
+      }),
+      timeoutPromise,
+    ]) as any;
 
     const items = (response.items ?? []) as Entry<SeccionServicioSkeleton>[];
     console.log("[Contentful] SeccionServicio entries fetched:", items.length, items);
