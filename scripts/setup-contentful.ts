@@ -30,7 +30,7 @@ async function setupContentful() {
   try {
     console.log("🚀 Starting Contentful DBT web v1 setup...\n");
 
-    const client = createClient({
+    const client = contentfulManagement.createClient({
       accessToken: MANAGEMENT_TOKEN,
     });
 
