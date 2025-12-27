@@ -116,11 +116,17 @@ export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
   }
 
   try {
-    const response = await client.getEntries<PaginaInicioSkeleton>({
-      content_type: "paginaInicio",
-      limit: 1,
-      include: 2,
-    });
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Contentful API timeout")), 10000)
+    );
+    const response = await Promise.race([
+      client.getEntries<PaginaInicioSkeleton>({
+        content_type: "paginaInicio",
+        limit: 1,
+        include: 2,
+      }),
+      timeoutPromise,
+    ]) as any;
 
     const entry = response.items?.[0];
     if (!entry) {
