@@ -9,6 +9,7 @@ export default function Index() {
     data = fallbackLandingContent,
     isLoading,
     isError,
+    error,
   } = useContentfulData();
 
   return (
@@ -33,8 +34,16 @@ export default function Index() {
       {isError ? (
         <div className="container pt-3">
           <div className="alert alert-warning border" role="alert">
-            No se pudo cargar el contenido desde Contentful. Mostrando contenido
+            <strong>No se pudo cargar el contenido desde Contentful.</strong> Mostrando contenido
             de ejemplo.
+            {error && (
+              <details className="mt-2" style={{ fontSize: "0.85rem" }}>
+                <summary style={{ cursor: "pointer" }}>Error details</summary>
+                <pre style={{ marginTop: "0.5rem", whiteSpace: "pre-wrap" }}>
+                  {String(error)}
+                </pre>
+              </details>
+            )}
           </div>
         </div>
       ) : null}
