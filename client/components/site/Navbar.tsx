@@ -26,7 +26,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="navbar navbar-expand-lg bg-white border-bottom sticky-top"
+      className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top"
       data-site-navbar
     >
       <div className="container py-2">
