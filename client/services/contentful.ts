@@ -133,14 +133,23 @@ export async function fetchSeccionServicios(): Promise<
   LandingService[] | null
 > {
   const client = getContentfulClient();
-  if (!client) return null;
+  if (!client) {
+    console.warn("[Contentful] No client configured - missing env vars");
+    return null;
+  }
 
-  const response = await client.getEntries<SeccionServicioSkeleton>({
-    content_type: "SeccionServicio",
-    order: ["sys.createdAt"],
-    include: 2,
-  });
+  try {
+    const response = await client.getEntries<SeccionServicioSkeleton>({
+      content_type: "SeccionServicio",
+      order: ["sys.createdAt"],
+      include: 2,
+    });
 
-  const items = (response.items ?? []) as Entry<SeccionServicioSkeleton>[];
-  return items.map(mapSeccionServicio);
+    const items = (response.items ?? []) as Entry<SeccionServicioSkeleton>[];
+    console.log("[Contentful] SeccionServicio entries fetched:", items.length, items);
+    return items.map(mapSeccionServicio);
+  } catch (error) {
+    console.error("[Contentful] Error fetching SeccionServicio:", error);
+    throw error;
+  }
 }
