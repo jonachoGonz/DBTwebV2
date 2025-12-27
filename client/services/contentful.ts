@@ -121,7 +121,7 @@ export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
     );
     const response = await Promise.race([
       client.getEntries<PaginaInicioSkeleton>({
-        content_type: "paginaInicio",
+        content_type: "5Ey3sNNCbytnoyjC4OmlNy",
         limit: 1,
         include: 2,
       }),
@@ -157,7 +157,7 @@ export async function fetchSeccionServicios(): Promise<
     );
     const response = await Promise.race([
       client.getEntries<SeccionServicioSkeleton>({
-        content_type: "seccionServicio",
+        content_type: "2eoI5pJ1T0NF3aVhEpJq1V",
         include: 2,
       }),
       timeoutPromise,
