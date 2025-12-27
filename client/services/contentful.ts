@@ -16,7 +16,7 @@ type PaginaInicioFields = {
 
 type PaginaInicioSkeleton = EntrySkeletonType<
   PaginaInicioFields,
-  "PaginaInicio"
+  "paginaInicio"
 >;
 
 type SeccionServicioFields = {
