@@ -1,0 +1,108 @@
+import { createClient, type Asset, type Entry } from "contentful";
+import type { LandingService, PaginaInicioContent } from "@/types/contentful";
+
+type PaginaInicioFields = {
+  heroTitulo?: unknown;
+  heroSubtitulo?: unknown;
+  ctaTexto?: unknown;
+  bookingTitulo?: unknown;
+  bookingUrl?: unknown;
+};
+
+type SeccionServicioFields = {
+  titulo?: unknown;
+  descripcion?: unknown;
+  icono?: unknown;
+};
+
+function readString(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
+}
+
+function readAssetUrl(asset: Asset | undefined): { url?: string; alt?: string } {
+  const fileUrl = asset?.fields?.file && (asset.fields.file as any)?.url;
+  const title = readString(asset?.fields?.title);
+
+  if (!readString(fileUrl)) return { url: undefined, alt: title };
+
+  const url: string = (fileUrl as string).startsWith("//")
+    ? `https:${fileUrl}`
+    : (fileUrl as string);
+
+  return { url, alt: title };
+}
+
+export function hasContentfulConfig(): boolean {
+  return Boolean(
+    import.meta.env.VITE_CONTENTFUL_SPACE_ID &&
+      import.meta.env.VITE_CONTENTFUL_DELIVERY_TOKEN,
+  );
+}
+
+export function getContentfulClient() {
+  if (!hasContentfulConfig()) return null;
+
+  return createClient({
+    space: import.meta.env.VITE_CONTENTFUL_SPACE_ID,
+    accessToken: import.meta.env.VITE_CONTENTFUL_DELIVERY_TOKEN,
+    environment: import.meta.env.VITE_CONTENTFUL_ENVIRONMENT || "master",
+  });
+}
+
+export function mapPaginaInicio(entry: Entry<PaginaInicioFields>): PaginaInicioContent {
+  return {
+    heroTitulo:
+      readString(entry.fields.heroTitulo) ??
+      "DBT web v1 — Psicoterapia con enfoque compasivo",
+    heroSubtitulo:
+      readString(entry.fields.heroSubtitulo) ??
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Construye habilidades para vivir con más equilibrio.",
+    ctaTexto: readString(entry.fields.ctaTexto) ?? "Agendar",
+    bookingTitulo: readString(entry.fields.bookingTitulo) ?? "Reserva tu cita",
+    bookingUrl: readString(entry.fields.bookingUrl),
+  };
+}
+
+export function mapSeccionServicio(
+  entry: Entry<SeccionServicioFields>,
+): LandingService {
+  const iconAsset = entry.fields.icono as Asset | undefined;
+  const { url, alt } = readAssetUrl(iconAsset);
+
+  return {
+    titulo: readString(entry.fields.titulo) ?? "Servicio",
+    descripcion:
+      readString(entry.fields.descripcion) ??
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    iconoUrl: url,
+    iconoAlt: alt,
+  };
+}
+
+export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
+  const client = getContentfulClient();
+  if (!client) return null;
+
+  const response = await client.getEntries<PaginaInicioFields>({
+    content_type: "PaginaInicio",
+    limit: 1,
+    include: 2,
+  });
+
+  const entry = response.items?.[0];
+  return entry ? mapPaginaInicio(entry as Entry<PaginaInicioFields>) : null;
+}
+
+export async function fetchSeccionServicios(): Promise<LandingService[] | null> {
+  const client = getContentfulClient();
+  if (!client) return null;
+
+  const response = await client.getEntries<SeccionServicioFields>({
+    content_type: "SeccionServicio",
+    order: ["sys.createdAt"],
+    include: 2,
+  });
+
+  const items = (response.items ?? []) as Entry<SeccionServicioFields>[];
+  return items.map(mapSeccionServicio);
+}
