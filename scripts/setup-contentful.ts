@@ -162,6 +162,8 @@ async function setupContentful() {
     // 3. Create dummy entries (optional)
     // ============================================
     console.log("📚 Creating dummy content entries...\n");
+    console.log("⏳ Waiting 2 seconds for content types to activate...\n");
+    await sleep(2000);
 
     // Single paginaInicio entry
     try {
