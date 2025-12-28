@@ -89,13 +89,14 @@ export function mapPaginaInicio(
 export function mapSeccionServicio(
   entry: Entry<SeccionServicioSkeleton>,
 ): LandingService {
-  const iconAsset = entry.fields.icono as unknown as Asset | undefined;
+  const fields = entry.fields as any;
+  const iconAsset = (fields.icono || fields.icon) as unknown as Asset | undefined;
   const { url, alt } = readAssetUrl(iconAsset);
 
   return {
-    titulo: readString(entry.fields.titulo) ?? "Servicio",
+    titulo: readString(fields.titulo || fields.title) ?? "Servicio",
     descripcion:
-      readString(entry.fields.descripcion) ??
+      readString(fields.descripcion || fields.description) ??
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     iconoUrl: url,
     iconoAlt: alt,
