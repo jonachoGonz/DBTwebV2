@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  SECRETS_SCAN_OMIT_KEYS = "VITE_CONTENTFUL_SPACE_ID,VITE_CONTENTFUL_DELIVERY_TOKEN"
 
 [[redirects]]
   from = "/*"
