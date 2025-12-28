@@ -18,7 +18,7 @@ type SeccionServicioFields = {
 
 type PaginaInicioSkeleton = EntrySkeletonType<
   PaginaInicioFields,
-  "paginaInicio"
+  "5Ey3sNNCbytnoyjC4OmlNy"
 >;
 type SeccionServicioSkeleton = EntrySkeletonType<
   SeccionServicioFields,
