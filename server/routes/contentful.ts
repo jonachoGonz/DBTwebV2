@@ -113,7 +113,7 @@ export const handleContentfulLanding: RequestHandler = async (_req, res) => {
     try {
       const servicesResponse = await client.getEntries<SeccionServicioSkeleton>(
         {
-          content_type: "seccionServicio",
+          content_type: "3dwLLZs9gGH5zEzwIoBebi",
           include: 2,
         },
       );
