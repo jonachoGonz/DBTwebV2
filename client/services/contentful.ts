@@ -145,7 +145,7 @@ export async function fetchSeccionServicios(): Promise<
     );
     const response = (await Promise.race([
       client.getEntries<SeccionServicioSkeleton>({
-        content_type: "seccionServicio",
+        content_type: "3dwLLZs9gGH5zEzwIoBebi",
         include: 2,
       }),
       timeoutPromise,
