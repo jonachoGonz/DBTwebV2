@@ -36,11 +36,6 @@ export default function Index() {
           <div className="alert alert-warning border" role="alert">
             <strong>No se pudo cargar el contenido desde Contentful.</strong> Mostrando contenido
             de ejemplo.
-            {error && (
-              <pre style={{ marginTop: "0.5rem", whiteSpace: "pre-wrap", fontSize: "0.75rem" }}>
-                {String(error)}
-              </pre>
-            )}
           </div>
         </div>
       ) : null}
