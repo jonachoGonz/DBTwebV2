@@ -93,9 +93,8 @@ export const handleContentfulLanding: RequestHandler = async (_req, res) => {
         include: 2,
       });
       paginaInicio = paginaInicioResponse.items?.[0];
-      console.log("[Contentful Server] PaginaInicio fetched:", paginaInicio ? "success" : "not found");
     } catch (error) {
-      console.error("[Contentful Server] Error fetching PaginaInicio:", error);
+      console.error("[Contentful] Error fetching PaginaInicio:", error);
     }
 
     try {
@@ -106,9 +105,8 @@ export const handleContentfulLanding: RequestHandler = async (_req, res) => {
       services = (servicesResponse.items ?? []).map((service) =>
         mapSeccionServicio(service as Entry<SeccionServicioSkeleton>)
       );
-      console.log("[Contentful Server] Services fetched:", services.length, "items");
     } catch (error) {
-      console.warn("[Contentful Server] Warning fetching services (will use empty):", error);
+      console.warn("[Contentful] Error fetching services:", error);
       services = [];
     }
 
