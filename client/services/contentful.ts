@@ -60,15 +60,8 @@ export function hasContentfulConfig(): boolean {
 }
 
 export function getContentfulClient() {
-  if (!hasContentfulConfig()) {
-    console.warn("[Contentful] Config missing:", {
-      spaceId: import.meta.env.VITE_CONTENTFUL_SPACE_ID,
-      token: import.meta.env.VITE_CONTENTFUL_DELIVERY_TOKEN ? "***" : "undefined",
-    });
-    return null;
-  }
+  if (!hasContentfulConfig()) return null;
 
-  console.log("[Contentful] Creating client with space:", import.meta.env.VITE_CONTENTFUL_SPACE_ID);
   return createClient({
     space: import.meta.env.VITE_CONTENTFUL_SPACE_ID,
     accessToken: import.meta.env.VITE_CONTENTFUL_DELIVERY_TOKEN,
@@ -129,13 +122,7 @@ export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
     ]) as any;
 
     const entry = response.items?.[0];
-    if (!entry) {
-      console.warn("[Contentful] No PaginaInicio entry found");
-      return null;
-    }
-
-    console.log("[Contentful] PaginaInicio fetched successfully", entry);
-    return mapPaginaInicio(entry);
+    return entry ? mapPaginaInicio(entry) : null;
   } catch (error) {
     console.error("[Contentful] Error fetching PaginaInicio:", error);
     throw error;
@@ -164,7 +151,6 @@ export async function fetchSeccionServicios(): Promise<
     ]) as any;
 
     const items = (response.items ?? []) as Entry<SeccionServicioSkeleton>[];
-    console.log("[Contentful] SeccionServicio entries fetched:", items.length, items);
     return items.map(mapSeccionServicio);
   } catch (error) {
     console.error("[Contentful] Error fetching SeccionServicio:", error);
