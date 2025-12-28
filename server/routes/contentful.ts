@@ -83,27 +83,41 @@ export const handleContentfulLanding: RequestHandler = async (_req, res) => {
       environment: process.env.VITE_CONTENTFUL_ENVIRONMENT || "master",
     });
 
-    const [paginaInicioResponse, servicesResponse] = await Promise.all([
-      client.getEntries<PaginaInicioSkeleton>({
+    let paginaInicio = null;
+    let services = [];
+
+    try {
+      const paginaInicioResponse = await client.getEntries<PaginaInicioSkeleton>({
         content_type: "5Ey3sNNCbytnoyjC4OmlNy",
         limit: 1,
         include: 2,
-      }),
-      client.getEntries<SeccionServicioSkeleton>({
+      });
+      paginaInicio = paginaInicioResponse.items?.[0];
+      console.log("[Contentful Server] PaginaInicio fetched:", paginaInicio ? "success" : "not found");
+    } catch (error) {
+      console.error("[Contentful Server] Error fetching PaginaInicio:", error);
+    }
+
+    try {
+      const servicesResponse = await client.getEntries<SeccionServicioSkeleton>({
         content_type: "2eoI5pJ1T0NF3aVhEpJq1V",
         include: 2,
-      }),
-    ]);
-
-    const paginaInicio = paginaInicioResponse.items?.[0];
-    const services = servicesResponse.items ?? [];
+      });
+      services = (servicesResponse.items ?? []).map((service) =>
+        mapSeccionServicio(service as Entry<SeccionServicioSkeleton>)
+      );
+      console.log("[Contentful Server] Services fetched:", services.length, "items");
+    } catch (error) {
+      console.warn("[Contentful Server] Warning fetching services (will use empty):", error);
+      services = [];
+    }
 
     res.json({
       paginaInicio: paginaInicio ? mapPaginaInicio(paginaInicio) : null,
-      services: services.map((service) => mapSeccionServicio(service as Entry<SeccionServicioSkeleton>)),
+      services: services,
     });
   } catch (error) {
-    console.error("[Contentful Server] Error:", error);
+    console.error("[Contentful Server] Unexpected error:", error);
     res.status(500).json({
       error: String(error),
       paginaInicio: null,
