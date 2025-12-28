@@ -16,14 +16,25 @@ type SeccionServicioFields = {
   icono?: unknown;
 };
 
-type PaginaInicioSkeleton = EntrySkeletonType<PaginaInicioFields, "paginaInicio">;
-type SeccionServicioSkeleton = EntrySkeletonType<SeccionServicioFields, "seccionServicio">;
+type PaginaInicioSkeleton = EntrySkeletonType<
+  PaginaInicioFields,
+  "paginaInicio"
+>;
+type SeccionServicioSkeleton = EntrySkeletonType<
+  SeccionServicioFields,
+  "seccionServicio"
+>;
 
 function readString(value: unknown): string | undefined {
-  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
+  return typeof value === "string" && value.trim().length > 0
+    ? value
+    : undefined;
 }
 
-function readAssetUrl(asset: Asset | undefined): { url?: string; alt?: string } {
+function readAssetUrl(asset: Asset | undefined): {
+  url?: string;
+  alt?: string;
+} {
   const fileUrl = asset?.fields?.file && (asset.fields.file as any)?.url;
   const title = readString(asset?.fields?.title);
 
@@ -87,23 +98,26 @@ export const handleContentfulLanding: RequestHandler = async (_req, res) => {
     let services = [];
 
     try {
-      const paginaInicioResponse = await client.getEntries<PaginaInicioSkeleton>({
-        content_type: "paginaInicio",
-        limit: 1,
-        include: 2,
-      });
+      const paginaInicioResponse =
+        await client.getEntries<PaginaInicioSkeleton>({
+          content_type: "paginaInicio",
+          limit: 1,
+          include: 2,
+        });
       paginaInicio = paginaInicioResponse.items?.[0];
     } catch (error) {
       console.error("[Contentful] Error fetching PaginaInicio:", error);
     }
 
     try {
-      const servicesResponse = await client.getEntries<SeccionServicioSkeleton>({
-        content_type: "seccionServicio",
-        include: 2,
-      });
+      const servicesResponse = await client.getEntries<SeccionServicioSkeleton>(
+        {
+          content_type: "seccionServicio",
+          include: 2,
+        },
+      );
       services = (servicesResponse.items ?? []).map((service) =>
-        mapSeccionServicio(service as Entry<SeccionServicioSkeleton>)
+        mapSeccionServicio(service as Entry<SeccionServicioSkeleton>),
       );
     } catch (error) {
       console.warn("[Contentful] Error fetching services:", error);

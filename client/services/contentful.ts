@@ -110,16 +110,16 @@ export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
 
   try {
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Contentful API timeout")), 10000)
+      setTimeout(() => reject(new Error("Contentful API timeout")), 10000),
     );
-    const response = await Promise.race([
+    const response = (await Promise.race([
       client.getEntries<PaginaInicioSkeleton>({
         content_type: "paginaInicio",
         limit: 1,
         include: 2,
       }),
       timeoutPromise,
-    ]) as any;
+    ])) as any;
 
     const entry = response.items?.[0];
     return entry ? mapPaginaInicio(entry) : null;
@@ -140,15 +140,15 @@ export async function fetchSeccionServicios(): Promise<
 
   try {
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Contentful API timeout")), 10000)
+      setTimeout(() => reject(new Error("Contentful API timeout")), 10000),
     );
-    const response = await Promise.race([
+    const response = (await Promise.race([
       client.getEntries<SeccionServicioSkeleton>({
         content_type: "seccionServicio",
         include: 2,
       }),
       timeoutPromise,
-    ]) as any;
+    ])) as any;
 
     const items = (response.items ?? []) as Entry<SeccionServicioSkeleton>[];
     return items.map(mapSeccionServicio);
