@@ -101,7 +101,7 @@ export const handleContentfulLanding: RequestHandler = async (_req, res) => {
     try {
       const paginaInicioResponse =
         await client.getEntries<PaginaInicioSkeleton>({
-          content_type: "paginaInicio",
+          content_type: "5Ey3sNNCbytnoyjC4OmlNy",
           limit: 1,
           include: 2,
         });
