@@ -99,7 +99,7 @@ export const handleContentfulLanding: RequestHandler = async (_req, res) => {
 
     try {
       const servicesResponse = await client.getEntries<SeccionServicioSkeleton>({
-        content_type: "3dwLLZs9gGH5zEzwIoBebi",
+        content_type: "seccionServicio",
         include: 2,
       });
       services = (servicesResponse.items ?? []).map((service) =>
