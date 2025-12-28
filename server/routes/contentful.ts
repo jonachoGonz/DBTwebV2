@@ -57,14 +57,18 @@ function mapPaginaInicio(entry: Entry<PaginaInicioSkeleton>) {
       readString(fields.heroSubtitulo || fields.heroSubtitle) ??
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Construye habilidades para vivir con más equilibrio.",
     ctaTexto: readString(fields.ctaTexto || fields.ctaText) ?? "Agendar",
-    bookingTitulo: readString(fields.bookingTitulo || fields.bookingTitle) ?? "Reserva tu cita",
+    bookingTitulo:
+      readString(fields.bookingTitulo || fields.bookingTitle) ??
+      "Reserva tu cita",
     bookingUrl: readString(fields.bookingUrl || fields.bookingURL),
   };
 }
 
 function mapSeccionServicio(entry: Entry<SeccionServicioSkeleton>) {
   const fields = entry.fields as any;
-  const iconAsset = (fields.icono || fields.icon) as unknown as Asset | undefined;
+  const iconAsset = (fields.icono || fields.icon) as unknown as
+    | Asset
+    | undefined;
   const { url, alt } = readAssetUrl(iconAsset);
 
   return {
