@@ -72,16 +72,17 @@ export function getContentfulClient() {
 export function mapPaginaInicio(
   entry: Entry<PaginaInicioSkeleton>,
 ): PaginaInicioContent {
+  const fields = entry.fields as any;
   return {
     heroTitulo:
-      readString(entry.fields.heroTitulo) ??
+      readString(fields.heroTitulo || fields.heroTitle) ??
       "DBT web v1 — Psicoterapia con enfoque compasivo",
     heroSubtitulo:
-      readString(entry.fields.heroSubtitulo) ??
+      readString(fields.heroSubtitulo || fields.heroSubtitle) ??
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Construye habilidades para vivir con más equilibrio.",
-    ctaTexto: readString(entry.fields.ctaTexto) ?? "Agendar",
-    bookingTitulo: readString(entry.fields.bookingTitulo) ?? "Reserva tu cita",
-    bookingUrl: readString(entry.fields.bookingUrl),
+    ctaTexto: readString(fields.ctaTexto || fields.ctaText) ?? "Agendar",
+    bookingTitulo: readString(fields.bookingTitulo || fields.bookingTitle) ?? "Reserva tu cita",
+    bookingUrl: readString(fields.bookingUrl || fields.bookingURL),
   };
 }
 
