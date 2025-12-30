@@ -19,9 +19,10 @@ async function fetchLandingContent(): Promise<LandingContent> {
 
     return {
       ...base,
-      services: services && services.length > 0
-        ? services
-        : fallbackLandingContent.services,
+      services:
+        services && services.length > 0
+          ? services
+          : fallbackLandingContent.services,
     };
   } catch (error) {
     console.error("[useContentfulData] Error fetching landing content:", error);
