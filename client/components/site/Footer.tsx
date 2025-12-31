@@ -31,13 +31,13 @@ export default function Footer() {
             <div className="d-flex flex-wrap gap-3 justify-content-md-end">
               <Link
                 className="link-secondary text-decoration-none"
-                to="/#services"
+                to="/#servicios"
               >
                 Servicios
               </Link>
               <Link
                 className="link-secondary text-decoration-none"
-                to="/#booking"
+                to="/#contacto"
               >
                 Reserva
               </Link>

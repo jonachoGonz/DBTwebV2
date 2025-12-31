@@ -15,7 +15,7 @@ export const fallbackLandingContent: LandingContent = {
   heroCtaText: "Quiero comenzar terapia",
   heroCtaLink: "https://wa.me/56949897699",
   heroSecondaryCtaText: "Conoce el Programa DBT",
-  heroSecondaryCtaLink: "/#services",
+  heroSecondaryCtaLink: "/#servicios",
 
   customCss: undefined,
 
