@@ -27,7 +27,7 @@ export default function NotFound() {
                 <Link to="/" className="btn btn-primary">
                   Volver al inicio
                 </Link>
-                <Link to="/#services" className="btn btn-outline-secondary">
+                <Link to="/#servicios" className="btn btn-outline-secondary">
                   Ver servicios
                 </Link>
               </div>
