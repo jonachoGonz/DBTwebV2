@@ -5,6 +5,13 @@ export type LandingService = {
   iconoAlt?: string;
 };
 
+export type OurSpaceSlide = {
+  titulo: string;
+  imagenUrl?: string;
+  imagenAlt?: string;
+  enlace?: string;
+};
+
 export type PaginaInicioContent = {
   heroBackgroundImageUrl?: string;
   heroBackgroundImageAlt?: string;
@@ -24,6 +31,13 @@ export type PaginaInicioContent = {
 
   bookingTitulo: string;
   bookingUrl?: string;
+
+  espacioSubtitulo?: string;
+  espacioTitulo?: string;
+  espacioLinkTexto?: string;
+  espacioLinkUrl?: string;
+  espacioCss?: string;
+  espacioSlides?: OurSpaceSlide[];
 };
 
 export type LandingContent = PaginaInicioContent & {
