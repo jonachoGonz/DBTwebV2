@@ -2,107 +2,202 @@ import { Link } from "react-router-dom";
 
 type HeroSectionProps = {
   id?: string;
-  heroTitulo: string;
-  heroSubtitulo: string;
-  ctaTexto: string;
+  heroBackgroundImageUrl?: string;
+  heroBackgroundImageAlt?: string;
+  heroLogoUrl?: string;
+  heroLogoAlt?: string;
+  heroTitleMain: string;
+  heroSubtitle: string;
+  heroDescription?: string;
+  heroCtaText: string;
+  heroCtaLink?: string;
+  heroSecondaryCtaText?: string;
+  heroSecondaryCtaLink?: string;
+  customCss?: string;
 };
+
+function isExternalLink(href: string): boolean {
+  return /^https?:\/\//i.test(href) || href.startsWith("mailto:") || href.startsWith("tel:");
+}
+
+function HeroLink({
+  href,
+  className,
+  children,
+  ariaLabel,
+}: {
+  href: string;
+  className: string;
+  children: React.ReactNode;
+  ariaLabel?: string;
+}) {
+  if (href.startsWith("/#") || href.startsWith("#")) {
+    return (
+      <Link to={href.startsWith("/#") ? href : `/${href}`} className={className} aria-label={ariaLabel}>
+        {children}
+      </Link>
+    );
+  }
+
+  if (isExternalLink(href)) {
+    return (
+      <a
+        href={href}
+        className={className}
+        aria-label={ariaLabel}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <a href={href} className={className} aria-label={ariaLabel}>
+      {children}
+    </a>
+  );
+}
 
 export default function HeroSection({
   id,
-  heroTitulo,
-  heroSubtitulo,
-  ctaTexto,
+  heroBackgroundImageUrl,
+  heroBackgroundImageAlt,
+  heroLogoUrl,
+  heroLogoAlt,
+  heroTitleMain,
+  heroSubtitle,
+  heroDescription,
+  heroCtaText,
+  heroCtaLink,
+  heroSecondaryCtaText,
+  heroSecondaryCtaLink,
+  customCss,
 }: HeroSectionProps) {
+  const showPrimaryCta = Boolean(heroCtaLink && heroCtaText);
+  const showSecondaryCta = Boolean(heroSecondaryCtaLink && heroSecondaryCtaText);
+
   return (
     <section
       id={id}
-      className="py-5"
+      className="position-relative w-100 overflow-hidden"
       style={{
-        background:
-          "radial-gradient(1200px 600px at 10% 20%, rgba(24, 123, 112, 0.15), transparent 60%), radial-gradient(1000px 600px at 90% 10%, rgba(30, 58, 138, 0.12), transparent 55%), linear-gradient(180deg, #ffffff, rgba(241, 249, 248, 0.7))",
+        minHeight: 800,
+        height: "100vh",
+        borderRadius: 20,
+        backgroundColor: "rgb(252, 248, 241)",
+        backgroundImage: heroBackgroundImageUrl
+          ? `url(${heroBackgroundImageUrl})`
+          : "radial-gradient(1200px 600px at 10% 20%, rgba(24, 123, 112, 0.15), transparent 60%), radial-gradient(1000px 600px at 90% 10%, rgba(30, 58, 138, 0.12), transparent 55%), linear-gradient(180deg, #ffffff, rgba(241, 249, 248, 0.7))",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
+      aria-label="Hero"
     >
-      <div className="container py-lg-4">
-        <div className="row align-items-center g-5">
-          <div className="col-12 col-lg-7">
-            <div className="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill border bg-white shadow-sm">
-              <span
-                className="rounded-circle"
-                style={{
-                  width: 8,
-                  height: 8,
-                  backgroundColor: "rgb(var(--bs-primary-rgb))",
-                  display: "inline-block",
-                }}
-                aria-hidden="true"
-              />
-              <span className="small text-secondary">
-                Psicoterapia • DBT • Salud mental
-              </span>
-            </div>
+      {customCss ? <style>{customCss}</style> : null}
 
-            <h1 className="display-5 fw-bold mt-4 mb-3">{heroTitulo}</h1>
-            <p className="lead text-secondary mb-4" style={{ maxWidth: 640 }}>
-              {heroSubtitulo}
-            </p>
+      {/* Background image accessibility (keeps design while providing alt text) */}
+      {heroBackgroundImageUrl ? (
+        <img
+          src={heroBackgroundImageUrl}
+          alt={heroBackgroundImageAlt || ""}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: -20,
+          }}
+          loading="lazy"
+        />
+      ) : null}
 
-            <div className="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-3">
-              <Link to="/#booking" className="btn btn-primary btn-lg">
-                {ctaTexto}
-              </Link>
-              <Link
-                to="/#services"
-                className="btn btn-outline-secondary btn-lg"
-              >
-                Ver servicios
-              </Link>
-            </div>
+      {/* Dark overlay for readability */}
+      <div
+        aria-hidden="true"
+        className="position-absolute top-0 start-0 w-100 h-100"
+        style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: -10 }}
+      />
 
-            <div className="mt-4 text-secondary small">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore.
-            </div>
-          </div>
-
-          <div className="col-12 col-lg-5">
-            <div className="card border-0 shadow-sm">
-              <div className="card-body p-4 p-lg-5">
-                <h2 className="h5 fw-semibold mb-3">¿Qué es DBT?</h2>
-                <p className="text-secondary mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. DBT
-                  se enfoca en habilidades prácticas para manejar emociones
-                  intensas y mejorar relaciones.
-                </p>
-
-                <div className="row g-3">
-                  <div className="col-12">
-                    <div className="p-3 rounded-3 border bg-light">
-                      <div className="fw-semibold">Mindfulness</div>
-                      <div className="text-secondary small">
-                        Presencia, claridad, y decisiones con intención.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <div className="p-3 rounded-3 border bg-light">
-                      <div className="fw-semibold">Regulación emocional</div>
-                      <div className="text-secondary small">
-                        Comprender patrones y responder con más equilibrio.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-12">
-                    <div className="p-3 rounded-3 border bg-light">
-                      <div className="fw-semibold">
-                        Efectividad interpersonal
-                      </div>
-                      <div className="text-secondary small">
-                        Límites sanos, comunicación y autocuidado.
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      <div className="container h-100">
+        <div className="row h-100 align-items-end align-items-lg-center justify-content-center text-center">
+          <div className="col-12 col-lg-10 col-xl-8 pb-5 pb-lg-0">
+            {heroLogoUrl ? (
+              <div className="mb-4">
+                <img
+                  src={heroLogoUrl}
+                  alt={heroLogoAlt || "Logo"}
+                  style={{
+                    maxWidth: 220,
+                    width: "100%",
+                    height: "auto",
+                    filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.35))",
+                  }}
+                  loading="lazy"
+                />
               </div>
+            ) : null}
+
+            <h1
+              className="fw-bold text-white mb-3"
+              style={{
+                fontSize: "clamp(2.25rem, 4vw, 3.75rem)",
+                lineHeight: 1.05,
+                textShadow: "0 2px 16px rgba(0,0,0,0.35)",
+              }}
+            >
+              {heroTitleMain}
+            </h1>
+
+            <div
+              className="text-white mb-3"
+              style={{
+                fontSize: "clamp(1.25rem, 2vw, 1.875rem)",
+                fontWeight: 300,
+                lineHeight: 1.2,
+                textShadow: "0 1px 12px rgba(0,0,0,0.35)",
+              }}
+            >
+              {heroSubtitle}
+            </div>
+
+            {heroDescription ? (
+              <p
+                className="text-white mb-4"
+                style={{
+                  fontSize: "clamp(1rem, 1.5vw, 1.25rem)",
+                  fontWeight: 100,
+                  lineHeight: 1.4,
+                  opacity: 0.95,
+                  textShadow: "0 1px 12px rgba(0,0,0,0.35)",
+                }}
+              >
+                {heroDescription}
+              </p>
+            ) : null}
+
+            <div className="d-flex flex-column flex-sm-row justify-content-center gap-3">
+              {showPrimaryCta ? (
+                <HeroLink
+                  href={heroCtaLink as string}
+                  className="btn btn-light btn-lg px-4 py-3 rounded-pill"
+                  ariaLabel={heroCtaText}
+                >
+                  {heroCtaText}
+                </HeroLink>
+              ) : null}
+
+              {showSecondaryCta ? (
+                <HeroLink
+                  href={heroSecondaryCtaLink as string}
+                  className="btn btn-outline-light btn-lg px-4 py-3 rounded-pill"
+                  ariaLabel={heroSecondaryCtaText}
+                >
+                  {heroSecondaryCtaText}
+                </HeroLink>
+              ) : null}
             </div>
           </div>
         </div>

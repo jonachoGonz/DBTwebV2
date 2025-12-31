@@ -42,9 +42,18 @@ export default function Index() {
 
       <HeroSection
         id="top"
-        heroTitulo={data.heroTitulo}
-        heroSubtitulo={data.heroSubtitulo}
-        ctaTexto={data.ctaTexto}
+        heroBackgroundImageUrl={data.heroBackgroundImageUrl}
+        heroBackgroundImageAlt={data.heroBackgroundImageAlt}
+        heroLogoUrl={data.heroLogoUrl}
+        heroLogoAlt={data.heroLogoAlt}
+        heroTitleMain={data.heroTitleMain}
+        heroSubtitle={data.heroSubtitle}
+        heroDescription={data.heroDescription}
+        heroCtaText={data.heroCtaText}
+        heroCtaLink={data.heroCtaLink}
+        heroSecondaryCtaText={data.heroSecondaryCtaText}
+        heroSecondaryCtaLink={data.heroSecondaryCtaLink}
+        customCss={data.customCss}
       />
 
       <ServicesSection id="services" services={data.services} />
