@@ -59,7 +59,10 @@ type EspacioSlideFields = {
   enlace?: unknown;
 };
 
-type EspacioSlideSkeleton = EntrySkeletonType<EspacioSlideFields, "espacioSlide">;
+type EspacioSlideSkeleton = EntrySkeletonType<
+  EspacioSlideFields,
+  "espacioSlide"
+>;
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0
@@ -116,7 +119,9 @@ function mapEspacioSlide(entry: Entry<EspacioSlideSkeleton>): OurSpaceSlide {
 }
 
 function isEntryLike(value: unknown): value is { fields: unknown } {
-  return Boolean(value && typeof value === "object" && "fields" in (value as any));
+  return Boolean(
+    value && typeof value === "object" && "fields" in (value as any),
+  );
 }
 
 export function mapPaginaInicio(
