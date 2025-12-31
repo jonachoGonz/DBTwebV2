@@ -22,6 +22,33 @@ export const fallbackLandingContent: LandingContent = {
 
   bookingTitulo: "Reserva tu cita",
   bookingUrl: undefined,
+
+  espacioSubtitulo: "OUR SOLUTIONS",
+  espacioTitulo: "OUR SPACE",
+  espacioLinkTexto: "Explore our space",
+  espacioLinkUrl: "/#contacto",
+  espacioCss: undefined,
+  espacioSlides: [
+    {
+      titulo: "Espacio terapéutico",
+      imagenUrl: undefined,
+      imagenAlt: "",
+      enlace: "/#contacto",
+    },
+    {
+      titulo: "Sesiones presenciales",
+      imagenUrl: undefined,
+      imagenAlt: "",
+      enlace: "/#contacto",
+    },
+    {
+      titulo: "Atención online",
+      imagenUrl: undefined,
+      imagenAlt: "",
+      enlace: "/#contacto",
+    },
+  ],
+
   services: [
     {
       titulo: "Terapia DBT individual",
