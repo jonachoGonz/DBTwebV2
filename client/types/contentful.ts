@@ -6,9 +6,22 @@ export type LandingService = {
 };
 
 export type PaginaInicioContent = {
-  heroTitulo: string;
-  heroSubtitulo: string;
-  ctaTexto: string;
+  heroBackgroundImageUrl?: string;
+  heroBackgroundImageAlt?: string;
+  heroLogoUrl?: string;
+  heroLogoAlt?: string;
+
+  heroTitleMain: string;
+  heroSubtitle: string;
+  heroDescription?: string;
+
+  heroCtaText: string;
+  heroCtaLink?: string;
+  heroSecondaryCtaText?: string;
+  heroSecondaryCtaLink?: string;
+
+  customCss?: string;
+
   bookingTitulo: string;
   bookingUrl?: string;
 };
