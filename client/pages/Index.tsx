@@ -1,6 +1,7 @@
 import HeroSection from "@/components/landing/HeroSection";
 import ServicesSection from "@/components/landing/ServicesSection";
 import BookingSection from "@/components/landing/BookingSection";
+import OurSpaceSection from "@/components/landing/OurSpaceSection";
 import { fallbackLandingContent } from "@/content/fallbackLandingContent";
 import { useContentfulData } from "@/hooks/useContentfulData";
 
@@ -55,6 +56,16 @@ export default function Index() {
       />
 
       <ServicesSection id="servicios" services={data.services} />
+
+      <OurSpaceSection
+        id="espacio"
+        espacioSubtitulo={data.espacioSubtitulo}
+        espacioTitulo={data.espacioTitulo}
+        espacioLinkTexto={data.espacioLinkTexto}
+        espacioLinkUrl={data.espacioLinkUrl}
+        espacioCss={data.espacioCss}
+        espacioSlides={data.espacioSlides}
+      />
 
       <BookingSection
         id="contacto"
