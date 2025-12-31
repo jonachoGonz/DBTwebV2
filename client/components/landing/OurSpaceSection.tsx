@@ -1,6 +1,3 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-
 import type { OurSpaceSlide } from "@/types/contentful";
 
 type OurSpaceSectionProps = {
@@ -86,6 +83,7 @@ function SlideCard({ slide }: { slide: OurSpaceSlide }) {
         textDecoration: "none",
         color: "inherit",
         display: "block",
+        scrollSnapAlign: "start",
       }}
       className="our-space-slide"
     >
@@ -226,7 +224,7 @@ export default function OurSpaceSection({
         </div>
       </div>
 
-      {/* Slider (gray container) */}
+      {/* Carousel (gray container) */}
       <div
         style={{
           backgroundColor: "rgb(226, 220, 213)",
@@ -234,28 +232,54 @@ export default function OurSpaceSection({
           paddingBottom: 88,
         }}
       >
-        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 24px" }}>
-          <Swiper
-            spaceBetween={22}
-            slidesPerView={1.05}
-            breakpoints={{
-              640: { slidesPerView: 1.4, spaceBetween: 22 },
-              900: { slidesPerView: 2.2, spaceBetween: 24 },
-              1200: { slidesPerView: 2.5, spaceBetween: 26 },
+        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
+          <div
+            className="our-space-track"
+            style={{
+              display: "flex",
+              gap: 22,
+              paddingLeft: 24,
+              paddingRight: 24,
+              overflowX: "auto",
+              overflowY: "hidden",
+              scrollSnapType: "x mandatory",
+              scrollPaddingLeft: 24,
+              WebkitOverflowScrolling: "touch",
             }}
           >
             {slides.map((slide, idx) => (
-              <SwiperSlide key={`${slide.titulo}-${idx}`}> 
+              <div
+                key={`${slide.titulo}-${idx}`}
+                className="our-space-item"
+                style={{ flex: "0 0 88%" }}
+              >
                 <SlideCard slide={slide} />
-              </SwiperSlide>
+              </div>
             ))}
-          </Swiper>
+          </div>
 
-          {/* Hover animation for arrow */}
+          {/* Hover animation + responsive slide widths + scrollbar hiding */}
           <style>{`
+            .our-space-track {
+              scrollbar-width: none;
+            }
+            .our-space-track::-webkit-scrollbar {
+              display: none;
+            }
             .our-space-slide:hover .our-space-slide-arrow {
               opacity: 1;
               transform: translateX(4px);
+            }
+
+            @media (min-width: 640px) {
+              .our-space-item { flex-basis: 65% !important; }
+            }
+            @media (min-width: 900px) {
+              .our-space-item { flex-basis: 46% !important; }
+            }
+            @media (min-width: 1200px) {
+              /* ~2.5 slides visible */
+              .our-space-item { flex-basis: calc(40% - 10px) !important; }
             }
           `}</style>
         </div>
