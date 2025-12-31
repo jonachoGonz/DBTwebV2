@@ -1,98 +1,216 @@
 import { useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type NavItem = {
   label: string;
   to: string;
+  pill?: boolean;
 };
+
+function NavLink({
+  item,
+  onClick,
+}: {
+  item: NavItem;
+  onClick: () => void;
+}) {
+  const baseStyle: React.CSSProperties = {
+    color: "rgb(252, 248, 241)",
+    textDecoration: "none",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px 20px",
+    borderRadius: 9999,
+    border: item.pill ? "1px solid rgba(242, 236, 226, 0.5)" : "1px solid rgba(0,0,0,0)",
+    transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+    lineHeight: "20.8px",
+  };
+
+  return (
+    <Link to={item.to} style={baseStyle} onClick={onClick}>
+      {item.label}
+    </Link>
+  );
+}
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const location = useLocation();
 
   const navItems: NavItem[] = useMemo(
     () => [
-      { label: "Inicio", to: "/#top" },
-      { label: "Servicios", to: "/#services" },
-      { label: "Reserva", to: "/#booking" },
+      { label: "Inicio", to: "/#inicio" },
+      { label: "Sobre Nosotros", to: "/#nosotros" },
+      { label: "Terapias", to: "/#terapias" },
+      { label: "Servicios", to: "/#servicios" },
+      { label: "Equipo", to: "/#equipo" },
+      { label: "Proceso", to: "/#proceso" },
+      { label: "Contacto", to: "/#contacto", pill: true },
     ],
     [],
   );
 
-  const isActive = (to: string) => {
-    const url = new URL(to, window.location.origin);
-    return location.pathname === url.pathname && location.hash === url.hash;
-  };
-
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top"
-      data-site-navbar
+    <section
+      style={{
+        position: "absolute",
+        top: 30,
+        left: 0,
+        right: 0,
+        width: "100%",
+        zIndex: 100,
+      }}
+      aria-label="Site Navigation"
     >
-      <div className="container py-2">
-        <Link
-          to="/"
-          className="navbar-brand d-flex align-items-center gap-2 fw-bold"
-          onClick={() => setOpen(false)}
-        >
-          <span
-            className="d-inline-flex align-items-center justify-content-center rounded-circle"
-            style={{
-              width: 36,
-              height: 36,
-              background:
-                "linear-gradient(135deg, rgb(var(--bs-primary-rgb)), #1e3a8a)",
-              color: "#fff",
-              fontSize: 12,
-              letterSpacing: 0.8,
-            }}
-            aria-hidden="true"
-          >
-            DBT
-          </span>
-          <span className="d-none d-sm-inline">DBT web v1</span>
-        </Link>
-
-        <button
-          className="navbar-toggler"
-          type="button"
-          aria-controls="site-navbar"
-          aria-expanded={open}
-          aria-label="Toggle navigation"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-
+      <div style={{ maxWidth: "calc(100% - 60px)", margin: "0 auto" }}>
         <div
-          className={`navbar-collapse collapse ${open ? "show" : ""}`}
-          id="site-navbar"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: 30,
+          }}
         >
-          <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-2 mt-3 mt-lg-0">
-            {navItems.map((item) => (
-              <li className="nav-item" key={item.to}>
-                <Link
-                  to={item.to}
-                  className={`nav-link ${isActive(item.to) ? "active fw-semibold" : ""}`}
-                  onClick={() => setOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <Link
+            to="/"
+            style={{
+              color: "rgb(252, 248, 241)",
+              textDecoration: "none",
+              position: "relative",
+            }}
+            onClick={() => setOpen(false)}
+          >
+            <div
+              style={{
+                color: "rgb(252, 248, 241)",
+                fontSize: 24,
+                fontWeight: 700,
+                lineHeight: "32px",
+              }}
+            >
+              DBT Salud
+            </div>
+          </Link>
 
-          <div className="ms-lg-3 mt-3 mt-lg-0">
-            <Link
-              to="/#booking"
-              className="btn btn-primary w-100"
+          <nav
+            className="d-none d-lg-flex"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              position: "relative",
+            }}
+          >
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                item={item}
+                onClick={() => setOpen(false)}
+              />
+            ))}
+          </nav>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <div
+                style={{
+                  color: "rgb(252, 248, 241)",
+                  fontSize: 13.5,
+                  lineHeight: "17.55px",
+                }}
+              >
+                EN
+              </div>
+            </div>
+
+            <a
+              href="https://wa.me/56949897699"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                backgroundColor: "rgb(252, 248, 241)",
+                borderRadius: 9999,
+                color: "rgb(0, 0, 0)",
+                textDecoration: "none",
+                fontWeight: 500,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "12px 24px",
+                transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+                whiteSpace: "nowrap",
+              }}
               onClick={() => setOpen(false)}
             >
-              Agendar
-            </Link>
+              Agenda tu sesión
+            </a>
+
+            <button
+              type="button"
+              className="d-inline-flex d-lg-none"
+              aria-label="Toggle navigation"
+              aria-expanded={open}
+              onClick={() => setOpen((v) => !v)}
+              style={{
+                width: 37,
+                height: 37,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 4,
+                backgroundColor: "transparent",
+                border: "1px solid rgba(226, 232, 240, 0)",
+                padding: 0,
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{ width: 15, height: 1, backgroundColor: "rgb(252, 248, 241)" }}
+              />
+              <span
+                aria-hidden="true"
+                style={{ width: 15, height: 1, backgroundColor: "rgb(252, 248, 241)" }}
+              />
+              <span
+                aria-hidden="true"
+                style={{ width: 15, height: 1, backgroundColor: "rgb(252, 248, 241)" }}
+              />
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {open ? (
+          <div
+            className="d-lg-none"
+            style={{
+              paddingLeft: 30,
+              paddingRight: 30,
+              paddingBottom: 18,
+            }}
+          >
+            <div
+              style={{
+                backdropFilter: "blur(10px)",
+                backgroundColor: "rgba(0,0,0,0.35)",
+                borderRadius: 20,
+                padding: 12,
+              }}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {navItems.map((item) => (
+                  <NavLink
+                    key={`mobile-${item.to}`}
+                    item={item}
+                    onClick={() => setOpen(false)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
-    </nav>
+    </section>
   );
 }

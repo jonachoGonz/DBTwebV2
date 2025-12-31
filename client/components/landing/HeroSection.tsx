@@ -4,8 +4,6 @@ type HeroSectionProps = {
   id?: string;
   heroBackgroundImageUrl?: string;
   heroBackgroundImageAlt?: string;
-  heroLogoUrl?: string;
-  heroLogoAlt?: string;
   heroTitleMain: string;
   heroSubtitle: string;
   heroDescription?: string;
@@ -23,17 +21,18 @@ function isExternalLink(href: string): boolean {
 function HeroLink({
   href,
   className,
+  style,
   children,
-  ariaLabel,
 }: {
   href: string;
-  className: string;
+  className?: string;
+  style?: React.CSSProperties;
   children: React.ReactNode;
-  ariaLabel?: string;
 }) {
   if (href.startsWith("/#") || href.startsWith("#")) {
+    const to = href.startsWith("/#") ? href : `/${href}`;
     return (
-      <Link to={href.startsWith("/#") ? href : `/${href}`} className={className} aria-label={ariaLabel}>
+      <Link to={to} className={className} style={style}>
         {children}
       </Link>
     );
@@ -41,20 +40,14 @@ function HeroLink({
 
   if (isExternalLink(href)) {
     return (
-      <a
-        href={href}
-        className={className}
-        aria-label={ariaLabel}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href={href} className={className} style={style} target="_blank" rel="noopener noreferrer">
         {children}
       </a>
     );
   }
 
   return (
-    <a href={href} className={className} aria-label={ariaLabel}>
+    <a href={href} className={className} style={style}>
       {children}
     </a>
   );
@@ -64,8 +57,6 @@ export default function HeroSection({
   id,
   heroBackgroundImageUrl,
   heroBackgroundImageAlt,
-  heroLogoUrl,
-  heroLogoAlt,
   heroTitleMain,
   heroSubtitle,
   heroDescription,
@@ -75,133 +66,185 @@ export default function HeroSection({
   heroSecondaryCtaLink,
   customCss,
 }: HeroSectionProps) {
-  const showPrimaryCta = Boolean(heroCtaLink && heroCtaText);
-  const showSecondaryCta = Boolean(heroSecondaryCtaLink && heroSecondaryCtaText);
+  const primaryHref = heroCtaLink || "https://wa.me/56949897699";
+  const secondaryText = heroSecondaryCtaText || "Conoce el Programa DBT";
+  const secondaryHref = heroSecondaryCtaLink || "/#servicios";
 
   return (
-    <section
-      id={id}
-      className="position-relative w-100 overflow-hidden"
+    <div
       style={{
-        minHeight: 800,
-        height: "100vh",
-        borderRadius: 20,
         backgroundColor: "rgb(252, 248, 241)",
-        backgroundImage: heroBackgroundImageUrl
-          ? undefined
-          : "radial-gradient(1200px 600px at 10% 20%, rgba(24, 123, 112, 0.15), transparent 60%), radial-gradient(1000px 600px at 90% 10%, rgba(30, 58, 138, 0.12), transparent 55%), linear-gradient(180deg, #ffffff, rgba(241, 249, 248, 0.7))",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        display: "flex",
+        flexDirection: "column",
+        height: 928,
+        maxHeight: 928,
+        maxWidth: 1800,
+        minHeight: 600,
+        padding: 15,
+        position: "relative",
+        zIndex: 99,
+        marginLeft: "auto",
+        marginRight: "auto",
       }}
-      aria-label="Hero"
     >
       {customCss ? <style>{customCss}</style> : null}
 
-      {/* Background image accessibility (keeps design while providing alt text) */}
-      {heroBackgroundImageUrl ? (
-        <img
-          src={heroBackgroundImageUrl}
-          alt={heroBackgroundImageAlt || ""}
+      <div
+        style={{
+          borderRadius: 20,
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          overflow: "hidden",
+          paddingBottom: 64,
+          position: "relative",
+          backgroundColor: "transparent",
+        }}
+        aria-label="Hero"
+      >
+        {heroBackgroundImageUrl ? (
+          <img
+            alt={heroBackgroundImageAlt || "Terapia DBT Salud"}
+            loading="lazy"
+            src={heroBackgroundImageUrl}
+            style={{
+              borderRadius: 20,
+              bottom: 0,
+              height: "100%",
+              left: 0,
+              maxWidth: "100%",
+              objectFit: "cover",
+              position: "absolute",
+              right: 0,
+              top: 0,
+              width: "100%",
+              zIndex: -20,
+            }}
+          />
+        ) : null}
+
+        {/* Dark overlay to match warm/dark atmosphere */}
+        <div
+          aria-hidden="true"
           style={{
             position: "absolute",
             inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            zIndex: -20,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: -10,
           }}
-          loading="lazy"
         />
-      ) : null}
 
-      {/* Dark overlay for readability */}
-      <div
-        aria-hidden="true"
-        className="position-absolute top-0 start-0 w-100 h-100"
-        style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: -10 }}
-      />
+        <div
+          style={{
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            marginLeft: "auto",
+            marginRight: "auto",
+            maxWidth: 1152,
+            paddingLeft: 24,
+            paddingRight: 24,
+            textAlign: "center",
+          }}
+        >
+          <h1
+            style={{
+              color: "rgb(255, 255, 255)",
+              fontSize: "clamp(48px, 6vw, 60px)",
+              fontWeight: 700,
+              lineHeight: "60px",
+              marginBottom: 20,
+              textAlign: "center",
+              whiteSpace: "pre-line",
+            }}
+          >
+            {heroTitleMain}
+          </h1>
 
-      <div className="container h-100">
-        <div className="row h-100 align-items-end align-items-lg-center justify-content-center text-center">
-          <div className="col-12 col-lg-10 col-xl-8 pb-5 pb-lg-0">
-            {heroLogoUrl ? (
-              <div className="mb-4">
-                <img
-                  src={heroLogoUrl}
-                  alt={heroLogoAlt || "Logo"}
-                  style={{
-                    maxWidth: 220,
-                    width: "100%",
-                    height: "auto",
-                    filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.35))",
-                  }}
-                  loading="lazy"
-                />
-              </div>
-            ) : null}
+          <div
+            style={{
+              color: "rgb(255, 255, 255)",
+              fontSize: 30,
+              fontWeight: 300,
+              lineHeight: "36px",
+              marginBottom: 80,
+              textAlign: "center",
+              whiteSpace: "pre-line",
+            }}
+          >
+            {heroSubtitle}
+          </div>
 
-            <h1
-              className="fw-bold text-white mb-3"
+          <div
+            style={{
+              color: "rgb(255, 255, 255)",
+              fontSize: 24,
+              fontWeight: 100,
+              lineHeight: "32px",
+              marginBottom: 32,
+              textAlign: "center",
+              whiteSpace: "pre-line",
+            }}
+          >
+            {heroDescription}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              flexWrap: "wrap",
+              justifyContent: "center",
+              textAlign: "center",
+            }}
+          >
+            <HeroLink
+              href={primaryHref}
               style={{
-                fontSize: "clamp(2.25rem, 4vw, 3.75rem)",
-                lineHeight: 1.05,
-                textShadow: "0 2px 16px rgba(0,0,0,0.35)",
+                alignItems: "center",
+                backgroundColor: "rgb(252, 248, 241)",
+                borderRadius: 9999,
+                color: "rgb(0, 0, 0)",
+                cursor: "pointer",
+                display: "flex",
+                fontSize: 18,
+                fontWeight: 500,
+                justifyContent: "center",
+                lineHeight: "28px",
+                padding: "16px 32px",
+                textAlign: "center",
+                textDecoration: "none",
               }}
             >
-              {heroTitleMain}
-            </h1>
+              {heroCtaText}
+            </HeroLink>
 
-            <div
-              className="text-white mb-3"
+            <HeroLink
+              href={secondaryHref}
               style={{
-                fontSize: "clamp(1.25rem, 2vw, 1.875rem)",
-                fontWeight: 300,
-                lineHeight: 1.2,
-                textShadow: "0 1px 12px rgba(0,0,0,0.35)",
+                alignItems: "center",
+                border: "2px solid rgb(252, 248, 241)",
+                borderRadius: 9999,
+                color: "rgb(252, 248, 241)",
+                cursor: "pointer",
+                display: "flex",
+                fontSize: 18,
+                fontWeight: 500,
+                justifyContent: "center",
+                lineHeight: "28px",
+                padding: "16px 32px",
+                textAlign: "center",
+                textDecoration: "none",
+                backgroundColor: "transparent",
               }}
             >
-              {heroSubtitle}
-            </div>
-
-            {heroDescription ? (
-              <p
-                className="text-white mb-4"
-                style={{
-                  fontSize: "clamp(1rem, 1.5vw, 1.25rem)",
-                  fontWeight: 100,
-                  lineHeight: 1.4,
-                  opacity: 0.95,
-                  textShadow: "0 1px 12px rgba(0,0,0,0.35)",
-                }}
-              >
-                {heroDescription}
-              </p>
-            ) : null}
-
-            <div className="d-flex flex-column flex-sm-row justify-content-center gap-3">
-              {showPrimaryCta ? (
-                <HeroLink
-                  href={heroCtaLink as string}
-                  className="btn btn-light btn-lg px-4 py-3 rounded-pill"
-                  ariaLabel={heroCtaText}
-                >
-                  {heroCtaText}
-                </HeroLink>
-              ) : null}
-
-              {showSecondaryCta ? (
-                <HeroLink
-                  href={heroSecondaryCtaLink as string}
-                  className="btn btn-outline-light btn-lg px-4 py-3 rounded-pill"
-                  ariaLabel={heroSecondaryCtaText}
-                >
-                  {heroSecondaryCtaText}
-                </HeroLink>
-              ) : null}
-            </div>
+              {secondaryText}
+            </HeroLink>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

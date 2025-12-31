@@ -41,11 +41,9 @@ export default function Index() {
       ) : null}
 
       <HeroSection
-        id="top"
+        id="inicio"
         heroBackgroundImageUrl={data.heroBackgroundImageUrl}
         heroBackgroundImageAlt={data.heroBackgroundImageAlt}
-        heroLogoUrl={data.heroLogoUrl}
-        heroLogoAlt={data.heroLogoAlt}
         heroTitleMain={data.heroTitleMain}
         heroSubtitle={data.heroSubtitle}
         heroDescription={data.heroDescription}
@@ -56,10 +54,10 @@ export default function Index() {
         customCss={data.customCss}
       />
 
-      <ServicesSection id="services" services={data.services} />
+      <ServicesSection id="servicios" services={data.services} />
 
       <BookingSection
-        id="booking"
+        id="contacto"
         bookingTitulo={data.bookingTitulo}
         bookingUrl={data.bookingUrl}
       />
