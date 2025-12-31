@@ -88,7 +88,7 @@ export default function HeroSection({
         borderRadius: 20,
         backgroundColor: "rgb(252, 248, 241)",
         backgroundImage: heroBackgroundImageUrl
-          ? `url(${heroBackgroundImageUrl})`
+          ? undefined
           : "radial-gradient(1200px 600px at 10% 20%, rgba(24, 123, 112, 0.15), transparent 60%), radial-gradient(1000px 600px at 90% 10%, rgba(30, 58, 138, 0.12), transparent 55%), linear-gradient(180deg, #ffffff, rgba(241, 249, 248, 0.7))",
         backgroundSize: "cover",
         backgroundPosition: "center",
