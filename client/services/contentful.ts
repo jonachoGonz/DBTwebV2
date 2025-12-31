@@ -7,9 +7,21 @@ import {
 import type { LandingService, PaginaInicioContent } from "@/types/contentful";
 
 type PaginaInicioFields = {
-  heroTitulo?: unknown;
-  heroSubtitulo?: unknown;
-  ctaTexto?: unknown;
+  heroBackgroundImage?: unknown;
+  heroLogo?: unknown;
+
+  heroTitleMain?: unknown;
+  heroSubtitle?: unknown;
+  heroDescription?: unknown;
+
+  heroCtaText?: unknown;
+  heroCtaLink?: unknown;
+
+  heroSecondaryCtaText?: unknown;
+  heroSecondaryCtaLink?: unknown;
+
+  customCss?: unknown;
+
   bookingTitulo?: unknown;
   bookingUrl?: unknown;
 };
@@ -73,14 +85,71 @@ export function mapPaginaInicio(
   entry: Entry<PaginaInicioSkeleton>,
 ): PaginaInicioContent {
   const fields = entry.fields as any;
+
+  const heroBackgroundAsset = (fields.heroBackgroundImage ||
+    fields.heroBackgroundImagen ||
+    fields.backgroundImage) as unknown as Asset | undefined;
+  const heroLogoAsset = (fields.heroLogo || fields.logo) as unknown as
+    | Asset
+    | undefined;
+
+  const background = readAssetUrl(heroBackgroundAsset);
+  const logo = readAssetUrl(heroLogoAsset);
+
+  const heroTitleMain =
+    readString(fields.heroTitleMain || fields.heroTitulo || fields.heroTitle) ??
+    "No necesitas tenerlo todo claro. A veces, solo hace falta tomar el primer paso.";
+
+  const heroSubtitle =
+    readString(fields.heroSubtitle || fields.heroSubtitulo) ??
+    "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad.";
+
+  const heroDescription = readString(
+    fields.heroDescription || fields.heroDescripcion,
+  );
+
+  const heroCtaText =
+    readString(fields.heroCtaText || fields.ctaText || fields.ctaTexto) ??
+    "Quiero comenzar terapia";
+
+  const heroCtaLink = readString(
+    fields.heroCtaLink ||
+      fields.heroCtaUrl ||
+      fields.heroCtaURL ||
+      fields.ctaLink ||
+      fields.ctaUrl ||
+      fields.ctaURL,
+  );
+
+  const heroSecondaryCtaText = readString(
+    fields.heroSecondaryCtaText || fields.heroCtaTextSecondary,
+  );
+
+  const heroSecondaryCtaLink = readString(
+    fields.heroSecondaryCtaLink ||
+      fields.heroCtaLinkSecondary ||
+      fields.heroCtaUrlSecondary,
+  );
+
+  const customCss = readString(fields.customCss);
+
   return {
-    heroTitulo:
-      readString(fields.heroTitulo || fields.heroTitle) ??
-      "DBT web v1 — Psicoterapia con enfoque compasivo",
-    heroSubtitulo:
-      readString(fields.heroSubtitulo || fields.heroSubtitle) ??
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Construye habilidades para vivir con más equilibrio.",
-    ctaTexto: readString(fields.ctaTexto || fields.ctaText) ?? "Agendar",
+    heroBackgroundImageUrl: background.url,
+    heroBackgroundImageAlt: background.alt,
+    heroLogoUrl: logo.url,
+    heroLogoAlt: logo.alt,
+
+    heroTitleMain,
+    heroSubtitle,
+    heroDescription,
+
+    heroCtaText,
+    heroCtaLink,
+    heroSecondaryCtaText,
+    heroSecondaryCtaLink,
+
+    customCss,
+
     bookingTitulo:
       readString(fields.bookingTitulo || fields.bookingTitle) ??
       "Reserva tu cita",
