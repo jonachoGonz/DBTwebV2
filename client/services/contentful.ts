@@ -4,7 +4,11 @@ import {
   type Entry,
   type EntrySkeletonType,
 } from "contentful";
-import type { LandingService, PaginaInicioContent } from "@/types/contentful";
+import type {
+  LandingService,
+  OurSpaceSlide,
+  PaginaInicioContent,
+} from "@/types/contentful";
 
 type PaginaInicioFields = {
   heroBackgroundImage?: unknown;
@@ -24,6 +28,13 @@ type PaginaInicioFields = {
 
   bookingTitulo?: unknown;
   bookingUrl?: unknown;
+
+  espacioSubtitulo?: unknown;
+  espacioTitulo?: unknown;
+  espacioLinkTexto?: unknown;
+  espacioLinkUrl?: unknown;
+  espacioCss?: unknown;
+  espacioSlides?: unknown;
 };
 
 type PaginaInicioSkeleton = EntrySkeletonType<
@@ -41,6 +52,14 @@ type SeccionServicioSkeleton = EntrySkeletonType<
   SeccionServicioFields,
   "3dwLLZs9gGH5zEzwIoBebi"
 >;
+
+type EspacioSlideFields = {
+  titulo?: unknown;
+  imagen?: unknown;
+  enlace?: unknown;
+};
+
+type EspacioSlideSkeleton = EntrySkeletonType<EspacioSlideFields, "espacioSlide">;
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0
@@ -79,6 +98,25 @@ export function getContentfulClient() {
     accessToken: import.meta.env.VITE_CONTENTFUL_DELIVERY_TOKEN,
     environment: import.meta.env.VITE_CONTENTFUL_ENVIRONMENT || "master",
   });
+}
+
+function mapEspacioSlide(entry: Entry<EspacioSlideSkeleton>): OurSpaceSlide {
+  const fields = entry.fields as any;
+  const imageAsset = (fields.imagen || fields.image) as unknown as
+    | Asset
+    | undefined;
+  const { url, alt } = readAssetUrl(imageAsset);
+
+  return {
+    titulo: readString(fields.titulo || fields.title) ?? "",
+    imagenUrl: url,
+    imagenAlt: alt,
+    enlace: readString(fields.enlace || fields.link || fields.url),
+  };
+}
+
+function isEntryLike(value: unknown): value is { fields: unknown } {
+  return Boolean(value && typeof value === "object" && "fields" in (value as any));
 }
 
 export function mapPaginaInicio(
@@ -133,6 +171,19 @@ export function mapPaginaInicio(
 
   const customCss = readString(fields.customCss);
 
+  const espacioSubtitulo = readString(fields.espacioSubtitulo);
+  const espacioTitulo = readString(fields.espacioTitulo);
+  const espacioLinkTexto = readString(fields.espacioLinkTexto);
+  const espacioLinkUrl = readString(fields.espacioLinkUrl);
+  const espacioCss = readString(fields.espacioCss);
+
+  const rawSlides = fields.espacioSlides as unknown;
+  const slides = Array.isArray(rawSlides)
+    ? (rawSlides.filter(isEntryLike) as Entry<EspacioSlideSkeleton>[]).map(
+        (slide) => mapEspacioSlide(slide),
+      )
+    : undefined;
+
   return {
     heroBackgroundImageUrl: background.url,
     heroBackgroundImageAlt: background.alt,
@@ -154,6 +205,13 @@ export function mapPaginaInicio(
       readString(fields.bookingTitulo || fields.bookingTitle) ??
       "Reserva tu cita",
     bookingUrl: readString(fields.bookingUrl || fields.bookingURL),
+
+    espacioSubtitulo,
+    espacioTitulo,
+    espacioLinkTexto,
+    espacioLinkUrl,
+    espacioCss,
+    espacioSlides: slides,
   };
 }
 
