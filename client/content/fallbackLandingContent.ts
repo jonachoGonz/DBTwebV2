@@ -8,7 +8,8 @@ export const fallbackLandingContent: LandingContent = {
 
   heroTitleMain:
     "No necesitas tenerlo todo claro. A veces, solo hace falta tomar el primer paso.",
-  heroSubtitle: "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad.",
+  heroSubtitle:
+    "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad.",
   heroDescription:
     "Atención psicológica online y presencial, en español e inglés, desde Chile.",
 

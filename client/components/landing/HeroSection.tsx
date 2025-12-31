@@ -15,7 +15,11 @@ type HeroSectionProps = {
 };
 
 function isExternalLink(href: string): boolean {
-  return /^https?:\/\//i.test(href) || href.startsWith("mailto:") || href.startsWith("tel:");
+  return (
+    /^https?:\/\//i.test(href) ||
+    href.startsWith("mailto:") ||
+    href.startsWith("tel:")
+  );
 }
 
 function HeroLink({
@@ -40,7 +44,13 @@ function HeroLink({
 
   if (isExternalLink(href)) {
     return (
-      <a href={href} className={className} style={style} target="_blank" rel="noopener noreferrer">
+      <a
+        href={href}
+        className={className}
+        style={style}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {children}
       </a>
     );

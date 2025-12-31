@@ -34,8 +34,8 @@ export default function Index() {
       {isError ? (
         <div className="container pt-3">
           <div className="alert alert-warning border" role="alert">
-            <strong>No se pudo cargar el contenido desde Contentful.</strong> Mostrando contenido
-            de ejemplo.
+            <strong>No se pudo cargar el contenido desde Contentful.</strong>{" "}
+            Mostrando contenido de ejemplo.
           </div>
         </div>
       ) : null}

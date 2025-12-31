@@ -7,13 +7,7 @@ type NavItem = {
   pill?: boolean;
 };
 
-function NavLink({
-  item,
-  onClick,
-}: {
-  item: NavItem;
-  onClick: () => void;
-}) {
+function NavLink({ item, onClick }: { item: NavItem; onClick: () => void }) {
   const baseStyle: React.CSSProperties = {
     color: "rgb(252, 248, 241)",
     textDecoration: "none",
@@ -22,7 +16,9 @@ function NavLink({
     alignItems: "center",
     padding: "10px 20px",
     borderRadius: 9999,
-    border: item.pill ? "1px solid rgba(242, 236, 226, 0.5)" : "1px solid rgba(0,0,0,0)",
+    border: item.pill
+      ? "1px solid rgba(242, 236, 226, 0.5)"
+      : "1px solid rgba(0,0,0,0)",
     transition: "all 0.15s cubic-bezier(0.4, 0, 0.2, 1)",
     lineHeight: "20.8px",
   };
@@ -166,15 +162,27 @@ export default function Navbar() {
             >
               <span
                 aria-hidden="true"
-                style={{ width: 15, height: 1, backgroundColor: "rgb(252, 248, 241)" }}
+                style={{
+                  width: 15,
+                  height: 1,
+                  backgroundColor: "rgb(252, 248, 241)",
+                }}
               />
               <span
                 aria-hidden="true"
-                style={{ width: 15, height: 1, backgroundColor: "rgb(252, 248, 241)" }}
+                style={{
+                  width: 15,
+                  height: 1,
+                  backgroundColor: "rgb(252, 248, 241)",
+                }}
               />
               <span
                 aria-hidden="true"
-                style={{ width: 15, height: 1, backgroundColor: "rgb(252, 248, 241)" }}
+                style={{
+                  width: 15,
+                  height: 1,
+                  backgroundColor: "rgb(252, 248, 241)",
+                }}
               />
             </button>
           </div>
