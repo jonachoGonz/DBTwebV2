@@ -197,7 +197,11 @@ function NavButton({
         transition: "opacity 160ms ease",
       }}
     >
-      {direction === "prev" ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+      {direction === "prev" ? (
+        <ArrowLeft size={18} />
+      ) : (
+        <ArrowRight size={18} />
+      )}
     </button>
   );
 }
