@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { OurSpaceSlide } from "@/types/contentful";
 
 type OurSpaceSectionProps = {
@@ -35,6 +36,14 @@ function ArrowRight({ size = 18 }: { size?: number }) {
         strokeLinejoin="round"
       />
     </svg>
+  );
+}
+
+function ArrowLeft({ size = 18 }: { size?: number }) {
+  return (
+    <span style={{ display: "inline-flex", transform: "rotate(180deg)" }}>
+      <ArrowRight size={size} />
+    </span>
   );
 }
 
@@ -155,6 +164,44 @@ function SlideCard({ slide }: { slide: OurSpaceSlide }) {
   );
 }
 
+function NavButton({
+  direction,
+  disabled,
+  onClick,
+}: {
+  direction: "prev" | "next";
+  disabled: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={direction === "prev" ? "Previous slide" : "Next slide"}
+      disabled={false}
+      onClick={() => {
+        if (disabled) return;
+        onClick();
+      }}
+      style={{
+        width: 44,
+        height: 44,
+        borderRadius: 9999,
+        border: "1px solid white",
+        background: "transparent",
+        color: "#fff",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: disabled ? 0.5 : 1,
+        cursor: disabled ? "default" : "pointer",
+        transition: "opacity 160ms ease",
+      }}
+    >
+      {direction === "prev" ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+    </button>
+  );
+}
+
 export default function OurSpaceSection({
   id,
   espacioSubtitulo,
@@ -164,12 +211,79 @@ export default function OurSpaceSection({
   espacioCss,
   espacioSlides,
 }: OurSpaceSectionProps) {
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
   const subtitle = (espacioSubtitulo || "OUR SOLUTIONS").toUpperCase();
   const title = (espacioTitulo || "OUR SPACE").toUpperCase();
   const linkText = espacioLinkTexto || "Explore our space";
   const linkUrl = espacioLinkUrl || "#";
 
-  const slides = (espacioSlides || []).filter((slide) => slide.titulo);
+  const slides = useMemo(
+    () => (espacioSlides || []).filter((slide) => slide.titulo),
+    [espacioSlides],
+  );
+
+  const updateNavState = () => {
+    const el = trackRef.current;
+    if (!el) {
+      setCanPrev(false);
+      setCanNext(false);
+      return;
+    }
+
+    const maxScrollLeft = el.scrollWidth - el.clientWidth;
+    const left = el.scrollLeft;
+
+    setCanPrev(maxScrollLeft > 1 && left > 1);
+    setCanNext(maxScrollLeft > 1 && left < maxScrollLeft - 1);
+  };
+
+  const getScrollStepPx = () => {
+    const el = trackRef.current;
+    if (!el) return 0;
+
+    const first = el.querySelector<HTMLElement>(".our-space-item");
+    if (!first) return Math.max(320, Math.round(el.clientWidth * 0.85));
+
+    const styles = window.getComputedStyle(el);
+    const gapValue = styles.columnGap || styles.gap;
+    const gap = gapValue ? Number.parseFloat(gapValue) : 0;
+
+    return Math.max(0, first.offsetWidth + (Number.isFinite(gap) ? gap : 0));
+  };
+
+  const slidePrev = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollBy({ left: -getScrollStepPx(), behavior: "smooth" });
+  };
+
+  const slideNext = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollBy({ left: getScrollStepPx(), behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    const el = trackRef.current;
+    updateNavState();
+
+    if (!el) return;
+
+    const onScroll = () => updateNavState();
+    el.addEventListener("scroll", onScroll, { passive: true });
+
+    const onResize = () => updateNavState();
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slides.length]);
 
   return (
     <section id={id} aria-label="Our Space">
@@ -177,7 +291,9 @@ export default function OurSpaceSection({
 
       {/* Header (black container) */}
       <div
+        id="espacioContainerTexts"
         style={{
+          position: "relative",
           backgroundColor: "rgb(28, 28, 28)",
           paddingTop: 120,
           paddingBottom: 120,
@@ -222,10 +338,28 @@ export default function OurSpaceSection({
 
           <SectionLink href={linkUrl}>{linkText}</SectionLink>
         </div>
+
+        {/* Custom navigation arrows (bottom-right, inside black container) */}
+        <div
+          aria-label="Carousel navigation"
+          style={{
+            position: "absolute",
+            right: 24,
+            bottom: 18,
+            display: "flex",
+            gap: 10,
+            alignItems: "center",
+            justifyContent: "flex-end",
+          }}
+        >
+          <NavButton direction="prev" disabled={!canPrev} onClick={slidePrev} />
+          <NavButton direction="next" disabled={!canNext} onClick={slideNext} />
+        </div>
       </div>
 
       {/* Carousel (gray container) */}
       <div
+        id="espacioContainerSlide"
         style={{
           backgroundColor: "rgb(226, 220, 213)",
           paddingTop: 72,
@@ -234,6 +368,7 @@ export default function OurSpaceSection({
       >
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div
+            ref={trackRef}
             className="our-space-track"
             style={{
               display: "flex",
