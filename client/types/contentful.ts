@@ -17,6 +17,18 @@ export type ServicioItem = {
   contenido?: string;
 };
 
+export type EquipoMiembro = {
+  nombre: string;
+  rol?: string;
+  imagenUrl?: string;
+  imagenAlt?: string;
+  descripcion?: string;
+  formacion?: string;
+  linkedinUrl?: string;
+  instagramUrl?: string;
+  agendaUrl?: string;
+};
+
 export type PaginaInicioContent = {
   heroBackgroundImageUrl?: string;
   heroBackgroundImageAlt?: string;
@@ -55,6 +67,12 @@ export type PaginaInicioContent = {
   serviciosSubtitulo?: string;
   serviciosCss?: string;
   listaServicios?: ServicioItem[];
+
+  equipoTitulo?: string;
+  equipoDescripcion?: string;
+  equipoSubtitulo?: string;
+  equipoCss?: string;
+  listaEquipo?: EquipoMiembro[];
 };
 
 export type LandingContent = PaginaInicioContent;
