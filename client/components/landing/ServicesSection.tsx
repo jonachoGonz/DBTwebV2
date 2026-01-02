@@ -166,7 +166,7 @@ export default function ServicesSection({
       <div
         id="serviciosContainer"
         style={{
-          backgroundColor: "rgb(250, 254, 134)",
+          backgroundColor: "rgb(253, 251, 247)",
           paddingTop: 96,
           paddingBottom: 96,
           paddingLeft: 24,
