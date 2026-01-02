@@ -270,7 +270,9 @@ function TeamModal({
           <div className="teamModalRight">
             <div className="teamModalRightInner">
               <div className="teamModalTitle">{member.nombre}</div>
-              {member.rol ? <div className="teamModalRole">{member.rol}</div> : null}
+              {member.rol ? (
+                <div className="teamModalRole">{member.rol}</div>
+              ) : null}
 
               {member.linkedinUrl || member.instagramUrl ? (
                 <div className="teamModalSocial">
@@ -303,7 +305,9 @@ function TeamModal({
               {member.descripcion ? (
                 <div className="teamModalSection">
                   <div className="teamModalSectionTitle">Bio</div>
-                  <div className="teamModalSectionBody">{member.descripcion}</div>
+                  <div className="teamModalSectionBody">
+                    {member.descripcion}
+                  </div>
                 </div>
               ) : null}
 
