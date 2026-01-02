@@ -1,6 +1,7 @@
 import HeroSection from "@/components/landing/HeroSection";
 import AboutSection from "@/components/landing/AboutSection";
 import ServicesSection from "@/components/landing/ServicesSection";
+import TeamSection from "@/components/landing/TeamSection";
 import BookingSection from "@/components/landing/BookingSection";
 import OurSpaceSection from "@/components/landing/OurSpaceSection";
 import { fallbackLandingContent } from "@/content/fallbackLandingContent";
@@ -72,6 +73,15 @@ export default function Index() {
         serviciosSubtitulo={data.serviciosSubtitulo}
         serviciosCss={data.serviciosCss}
         listaServicios={data.listaServicios}
+      />
+
+      <TeamSection
+        id="equipo"
+        equipoTitulo={data.equipoTitulo}
+        equipoDescripcion={data.equipoDescripcion}
+        equipoSubtitulo={data.equipoSubtitulo}
+        equipoCss={data.equipoCss}
+        listaEquipo={data.listaEquipo}
       />
 
       <OurSpaceSection
