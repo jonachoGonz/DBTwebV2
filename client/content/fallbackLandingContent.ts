@@ -76,4 +76,56 @@ export const fallbackLandingContent: LandingContent = {
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Planes de seguridad, contención y herramientas prácticas.",
     },
   ],
+
+  equipoTitulo: "Nuestro equipo",
+  equipoDescripcion:
+    "Un equipo clínico comprometido con una atención cálida, basada en evidencia y centrada en la persona.",
+  equipoSubtitulo: "Formación y experiencia",
+  equipoCss: undefined,
+  listaEquipo: [
+    {
+      nombre: "Dra. Camila Rivera",
+      rol: "Psicóloga Clínica",
+      imagenUrl: undefined,
+      imagenAlt: "",
+      descripcion:
+        "Especialista en DBT y terapia basada en mindfulness. Acompaña procesos de regulación emocional y habilidades interpersonales.",
+      formacion: "Magíster en Psicología Clínica · Formación DBT",
+      linkedinUrl: "https://www.linkedin.com",
+      instagramUrl: "https://www.instagram.com",
+      agendaUrl: "/#contacto",
+    },
+    {
+      nombre: "Sebastián Morales",
+      rol: "Terapeuta DBT",
+      imagenUrl: undefined,
+      imagenAlt: "",
+      descripcion:
+        "Enfoque práctico y colaborativo para trabajar en objetivos, hábitos y estrategias para el día a día.",
+      formacion: "Diplomado en Terapias Contextuales · DBT Skills",
+      linkedinUrl: "https://www.linkedin.com",
+      agendaUrl: "/#contacto",
+    },
+    {
+      nombre: "Valentina Rojas",
+      rol: "Nutricionista",
+      imagenUrl: undefined,
+      imagenAlt: "",
+      descripcion:
+        "Acompañamiento nutricional integrativo, especialmente en procesos vinculados a TCA y bienestar.",
+      formacion: "Nutrición Clínica · Especialización en TCA",
+      instagramUrl: "https://www.instagram.com",
+      agendaUrl: "/#contacto",
+    },
+    {
+      nombre: "Martín Álvarez",
+      rol: "Psiquiatra",
+      imagenUrl: undefined,
+      imagenAlt: "",
+      descripcion:
+        "Evaluación y acompañamiento médico con mirada integral y coordinación con el equipo terapéutico.",
+      formacion: "Psiquiatría Adultos · Salud Mental Comunitaria",
+      agendaUrl: "/#contacto",
+    },
+  ],
 };
