@@ -8,6 +8,7 @@ import type {
   LandingService,
   OurSpaceSlide,
   PaginaInicioContent,
+  ServicioItem,
 } from "@/types/contentful";
 
 type PaginaInicioFields = {
@@ -35,6 +36,11 @@ type PaginaInicioFields = {
   espacioLinkUrl?: unknown;
   espacioCss?: unknown;
   espacioSlides?: unknown;
+
+  serviciosTitulo?: unknown;
+  serviciosSubtitulo?: unknown;
+  serviciosCss?: unknown;
+  listaServicios?: unknown;
 };
 
 type PaginaInicioSkeleton = EntrySkeletonType<
@@ -63,6 +69,13 @@ type EspacioSlideSkeleton = EntrySkeletonType<
   EspacioSlideFields,
   "espacioSlide"
 >;
+
+type ServicioItemFields = {
+  titulo?: unknown;
+  contenido?: unknown;
+};
+
+type ServicioItemSkeleton = EntrySkeletonType<ServicioItemFields, "servicioItem">;
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0
@@ -122,6 +135,50 @@ function isEntryLike(value: unknown): value is { fields: unknown } {
   return Boolean(
     value && typeof value === "object" && "fields" in (value as any),
   );
+}
+
+type RichTextNode = {
+  nodeType?: string;
+  value?: string;
+  content?: RichTextNode[];
+};
+
+function richTextToPlainText(value: unknown): string | undefined {
+  if (typeof value === "string") return readString(value);
+  if (!value || typeof value !== "object") return undefined;
+
+  const root = value as RichTextNode;
+  const parts: string[] = [];
+
+  const visit = (node: RichTextNode) => {
+    if (node.nodeType === "text" && typeof node.value === "string") {
+      parts.push(node.value);
+    }
+
+    if (Array.isArray(node.content)) {
+      node.content.forEach(visit);
+
+      if (node.nodeType === "paragraph") {
+        parts.push("\n");
+      }
+    }
+  };
+
+  visit(root);
+
+  const text = parts.join("").replace(/\n\n+/g, "\n\n").trim();
+  return text.length > 0 ? text : undefined;
+}
+
+function mapServicioItem(entry: Entry<ServicioItemSkeleton>): ServicioItem {
+  const fields = entry.fields as any;
+
+  return {
+    titulo: readString(fields.titulo || fields.title) ?? "",
+    contenido:
+      readString(fields.contenido || fields.content) ||
+      richTextToPlainText(fields.contenido || fields.content),
+  };
 }
 
 export function mapPaginaInicio(
@@ -189,6 +246,20 @@ export function mapPaginaInicio(
       )
     : undefined;
 
+  const serviciosTitulo = readString(fields.serviciosTitulo);
+  const serviciosSubtitulo = readString(fields.serviciosSubtitulo);
+  const serviciosCss = readString(fields.serviciosCss);
+
+  const rawListaServicios = (fields.listaServicios ||
+    fields.listaServicio ||
+    fields.serviceItems) as unknown;
+
+  const listaServicios = Array.isArray(rawListaServicios)
+    ? (rawListaServicios.filter(isEntryLike) as Entry<ServicioItemSkeleton>[]).map(
+        (item) => mapServicioItem(item),
+      )
+    : undefined;
+
   return {
     heroBackgroundImageUrl: background.url,
     heroBackgroundImageAlt: background.alt,
@@ -217,6 +288,11 @@ export function mapPaginaInicio(
     espacioLinkUrl,
     espacioCss,
     espacioSlides: slides,
+
+    serviciosTitulo,
+    serviciosSubtitulo,
+    serviciosCss,
+    listaServicios,
   };
 }
 
