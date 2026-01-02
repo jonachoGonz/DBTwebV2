@@ -44,6 +44,13 @@ export type PaginaInicioContent = {
   espacioCss?: string;
   espacioSlides?: OurSpaceSlide[];
 
+  somosImagenUrl?: string;
+  somosImagenAlt?: string;
+  somosTitulo?: string;
+  somosSubtitulo?: string;
+  somosContenido?: string;
+  somosCss?: string;
+
   serviciosTitulo?: string;
   serviciosSubtitulo?: string;
   serviciosCss?: string;
