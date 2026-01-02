@@ -61,9 +61,7 @@ export default function Index() {
         somosImagenUrl={data.somosImagenUrl}
         somosImagenAlt={data.somosImagenAlt}
         somosTitulo={data.somosTitulo}
-        somosSubtitulo={data.somosSubtitulo}
         somosContenido={data.somosContenido}
-        somosCss={data.somosCss}
       />
 
       <ServicesSection
