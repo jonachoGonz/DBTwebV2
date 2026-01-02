@@ -169,11 +169,9 @@ export default function ServicesSection({
           backgroundColor: "rgb(253, 251, 247)",
           paddingTop: 96,
           paddingBottom: 96,
-          paddingLeft: 24,
-          paddingRight: 24,
         }}
       >
-        <div className="container px-0" style={{ maxWidth: 1240 }}>
+        <div className="container px-4" style={{ maxWidth: 1240 }}>
           <div className="row gx-5 gy-5 align-items-start">
             <div className="col-12 col-lg-5 text-start">
               <div className="servicesTitleSticky" style={{ maxWidth: 520 }}>
