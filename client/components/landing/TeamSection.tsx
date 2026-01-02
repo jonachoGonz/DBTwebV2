@@ -673,18 +673,20 @@ export default function TeamSection({
           height: 44px;
           border-radius: 9999px;
           border: 1px solid rgba(57, 68, 43, 0.22);
-          background: rgba(253, 251, 247, 0.65);
+          background: transparent;
           color: rgba(57, 68, 43, 0.9);
           display: inline-flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: transform 160ms ease, opacity 160ms ease;
+          transition: transform 160ms ease, opacity 160ms ease,
+            background-color 160ms ease;
         }
 
         .teamModalCloseIcon:hover {
           transform: translateY(-1px);
           opacity: 0.9;
+          background-color: rgba(253, 251, 247, 0.65);
         }
 
         .teamModalBody {
@@ -721,7 +723,7 @@ export default function TeamSection({
         }
 
         .teamModalRightInner {
-          padding: 22px 18px 120px;
+          padding: 22px 18px 22px;
         }
 
         .teamModalTitle {
@@ -784,11 +786,10 @@ export default function TeamSection({
         }
 
         .teamModalCtaSticky {
-          position: sticky;
-          bottom: 0;
+          position: static;
           width: 100%;
           background: rgb(253, 251, 247);
-          padding: 14px 18px 18px;
+          padding: 0 18px 18px;
           border-top: 1px solid rgba(57, 68, 43, 0.12);
         }
 
@@ -856,6 +857,8 @@ export default function TeamSection({
           }
 
           .teamModalCtaSticky {
+            position: sticky;
+            bottom: 0;
             padding: 16px 26px 20px;
           }
         }
