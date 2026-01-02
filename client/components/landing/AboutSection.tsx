@@ -5,9 +5,7 @@ type AboutSectionProps = {
   somosImagenUrl?: PaginaInicioContent["somosImagenUrl"];
   somosImagenAlt?: PaginaInicioContent["somosImagenAlt"];
   somosTitulo?: PaginaInicioContent["somosTitulo"];
-  somosSubtitulo?: PaginaInicioContent["somosSubtitulo"];
   somosContenido?: PaginaInicioContent["somosContenido"];
-  somosCss?: PaginaInicioContent["somosCss"];
 };
 
 export default function AboutSection({
@@ -15,131 +13,79 @@ export default function AboutSection({
   somosImagenUrl,
   somosImagenAlt,
   somosTitulo,
-  somosSubtitulo,
   somosContenido,
-  somosCss,
 }: AboutSectionProps) {
-  const title = somosTitulo || "Sobre nosotros";
+  const title = somosTitulo || "Your Care, Our Priority";
 
   return (
     <section id={id} aria-label="Sobre nosotros">
-      {somosCss ? <style>{somosCss}</style> : null}
+      <div id="somosContainer" className="py-5">
+        <div className="container py-lg-5">
+          <div className="row align-items-center g-5">
+            <div className="col-12 col-lg-6">
+              {somosImagenUrl ? (
+                <img
+                  src={somosImagenUrl}
+                  alt={somosImagenAlt || ""}
+                  className="img-fluid somosImage"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="somosImagePlaceholder" aria-hidden="true" />
+              )}
+            </div>
 
-      <div id="somosContainer">
-        <div className="somosGrid">
-          <div className="somosImageWrap">
-            {somosImagenUrl ? (
-              <img
-                src={somosImagenUrl}
-                alt={somosImagenAlt || ""}
-                className="somosImage"
-                loading="lazy"
-              />
-            ) : (
-              <div className="somosImagePlaceholder" aria-hidden="true" />
-            )}
-          </div>
+            <div className="col-12 col-lg-6 mt-4 mt-lg-0">
+              <h2 className="somosTitle">{title}</h2>
 
-          <div className="somosContent">
-            {somosSubtitulo ? (
-              <div className="somosSubtitle">{somosSubtitulo}</div>
-            ) : null}
-
-            <h2 className="somosTitle">{title}</h2>
-
-            {somosContenido ? (
-              <p className="somosBody">{somosContenido}</p>
-            ) : null}
+              {somosContenido ? (
+                <p className="somosBody">{somosContenido}</p>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
 
       <style>{`
         #somosContainer {
-          background: linear-gradient(90deg, #ffffff 0%, #ebe6d9 100%);
-        }
-
-        #somosContainer .somosGrid {
-          display: grid;
-          grid-template-columns: 1fr;
-        }
-
-        #somosContainer .somosImageWrap {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 4 / 3;
-          overflow: hidden;
-          background: rgba(0, 0, 0, 0.04);
+          background-color: rgb(253, 251, 247);
         }
 
         #somosContainer .somosImage {
+          border-radius: 30px;
           width: 100%;
-          height: 100%;
+          height: auto;
           object-fit: cover;
-          display: block;
         }
 
         #somosContainer .somosImagePlaceholder {
           width: 100%;
-          height: 100%;
+          aspect-ratio: 4 / 3;
+          border-radius: 30px;
           background: linear-gradient(135deg, #f4f1e7, #ebe6d9);
         }
 
-        #somosContainer .somosContent {
-          padding: 56px 24px;
-          text-align: left;
-          color: rgb(57, 68, 43);
-        }
-
-        #somosContainer .somosSubtitle {
-          font-size: 12px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          opacity: 0.9;
-        }
-
         #somosContainer .somosTitle {
-          margin: 18px 0 0;
+          margin: 0;
           font-family: Georgia, "Times New Roman", Times, serif;
-          font-size: clamp(2.25rem, 4.2vw, 3.75rem);
-          line-height: 0.98;
+          font-size: clamp(2.25rem, 4vw, 3.5rem);
+          line-height: 1.05;
           letter-spacing: -0.02em;
+          color: #39442b;
         }
 
         #somosContainer .somosBody {
-          margin: 22px 0 0;
-          max-width: 52ch;
+          margin: 18px 0 0;
           font-size: 16px;
           line-height: 1.6;
+          color: rgba(57, 68, 43, 0.82);
+          max-width: 60ch;
           white-space: pre-line;
         }
 
         @media (min-width: 992px) {
-          #somosContainer .somosGrid {
-            grid-template-columns: 54% 46%;
-            min-height: 640px;
-          }
-
-          #somosContainer .somosImageWrap {
-            aspect-ratio: auto;
-            height: 100%;
-          }
-
-          #somosContainer .somosContent {
-            padding: 160px 85px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          }
-
           #somosContainer .somosBody {
             font-size: 17px;
-          }
-        }
-
-        @media (min-width: 1200px) {
-          #somosContainer .somosGrid {
-            min-height: 700px;
           }
         }
       `}</style>
