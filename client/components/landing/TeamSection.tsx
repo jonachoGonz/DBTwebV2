@@ -86,7 +86,11 @@ function NavButton({
         e.currentTarget.style.transform = "translateY(0px)";
       }}
     >
-      {direction === "prev" ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+      {direction === "prev" ? (
+        <ArrowLeft size={18} />
+      ) : (
+        <ArrowRight size={18} />
+      )}
     </button>
   );
 }
@@ -245,9 +249,11 @@ function TeamModal({
 
           <div className="col-12 col-lg-7">
             <div className="teamModalTitle">{member.nombre}</div>
-            {member.rol ? <div className="teamModalRole">{member.rol}</div> : null}
+            {member.rol ? (
+              <div className="teamModalRole">{member.rol}</div>
+            ) : null}
 
-            {(member.linkedinUrl || member.instagramUrl) ? (
+            {member.linkedinUrl || member.instagramUrl ? (
               <div className="teamModalSocial">
                 {member.linkedinUrl ? (
                   <a
@@ -397,7 +403,9 @@ export default function TeamSection({
               <div className="teamSticky">
                 <h2 className="teamTitle">{title}</h2>
 
-                {description ? <p className="teamDescription">{description}</p> : null}
+                {description ? (
+                  <p className="teamDescription">{description}</p>
+                ) : null}
 
                 {subtitle ? <h3 className="teamSubtitle">{subtitle}</h3> : null}
               </div>
@@ -474,7 +482,10 @@ export default function TeamSection({
       </div>
 
       {activeMember ? (
-        <TeamModal member={activeMember} onClose={() => setActiveMember(null)} />
+        <TeamModal
+          member={activeMember}
+          onClose={() => setActiveMember(null)}
+        />
       ) : null}
 
       <style>{`

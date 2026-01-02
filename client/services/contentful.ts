@@ -88,7 +88,10 @@ type ServicioItemFields = {
   contenido?: unknown;
 };
 
-type ServicioItemSkeleton = EntrySkeletonType<ServicioItemFields, "servicioItem">;
+type ServicioItemSkeleton = EntrySkeletonType<
+  ServicioItemFields,
+  "servicioItem"
+>;
 
 type EquipoMiembroFields = {
   nombre?: unknown;
@@ -101,7 +104,10 @@ type EquipoMiembroFields = {
   agendaUrl?: unknown;
 };
 
-type EquipoMiembroSkeleton = EntrySkeletonType<EquipoMiembroFields, "equipoMiembro">;
+type EquipoMiembroSkeleton = EntrySkeletonType<
+  EquipoMiembroFields,
+  "equipoMiembro"
+>;
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0
@@ -209,9 +215,9 @@ function mapServicioItem(entry: Entry<ServicioItemSkeleton>): ServicioItem {
 
 function mapEquipoMiembro(entry: Entry<EquipoMiembroSkeleton>): EquipoMiembro {
   const fields = entry.fields as any;
-  const imageAsset = (fields.imagen || fields.image || fields.foto) as unknown as
-    | Asset
-    | undefined;
+  const imageAsset = (fields.imagen ||
+    fields.image ||
+    fields.foto) as unknown as Asset | undefined;
   const { url, alt } = readAssetUrl(imageAsset);
 
   return {
@@ -225,9 +231,13 @@ function mapEquipoMiembro(entry: Entry<EquipoMiembroSkeleton>): EquipoMiembro {
     formacion:
       readString(fields.formacion || fields.education) ||
       richTextToPlainText(fields.formacion || fields.education),
-    linkedinUrl: readString(fields.linkedinUrl || fields.linkedin || fields.linkedInUrl),
+    linkedinUrl: readString(
+      fields.linkedinUrl || fields.linkedin || fields.linkedInUrl,
+    ),
     instagramUrl: readString(fields.instagramUrl || fields.instagram),
-    agendaUrl: readString(fields.agendaUrl || fields.bookingUrl || fields.agendarUrl),
+    agendaUrl: readString(
+      fields.agendaUrl || fields.bookingUrl || fields.agendarUrl,
+    ),
   };
 }
 
@@ -302,7 +312,9 @@ export function mapPaginaInicio(
   const somosImagen = readAssetUrl(somosImagenAsset);
 
   const somosTitulo = readString(fields.somosTitulo || fields.aboutTitle);
-  const somosSubtitulo = readString(fields.somosSubtitulo || fields.aboutSubtitle);
+  const somosSubtitulo = readString(
+    fields.somosSubtitulo || fields.aboutSubtitle,
+  );
 
   const somosContenido =
     readString(fields.somosContenido || fields.aboutContent) ||
@@ -319,23 +331,25 @@ export function mapPaginaInicio(
     fields.serviceItems) as unknown;
 
   const listaServicios = Array.isArray(rawListaServicios)
-    ? (rawListaServicios.filter(isEntryLike) as Entry<ServicioItemSkeleton>[]).map(
-        (item) => mapServicioItem(item),
-      )
+    ? (
+        rawListaServicios.filter(isEntryLike) as Entry<ServicioItemSkeleton>[]
+      ).map((item) => mapServicioItem(item))
     : undefined;
 
   const equipoTitulo = readString(fields.equipoTitulo || fields.teamTitle);
   const equipoDescripcion =
     readString(fields.equipoDescripcion || fields.teamDescription) ||
     richTextToPlainText(fields.equipoDescripcion || fields.teamDescription);
-  const equipoSubtitulo = readString(fields.equipoSubtitulo || fields.teamSubtitle);
+  const equipoSubtitulo = readString(
+    fields.equipoSubtitulo || fields.teamSubtitle,
+  );
   const equipoCss = readString(fields.equipoCss || fields.teamCss);
 
   const rawListaEquipo = (fields.listaEquipo || fields.teamMembers) as unknown;
   const listaEquipo = Array.isArray(rawListaEquipo)
-    ? (rawListaEquipo.filter(isEntryLike) as Entry<EquipoMiembroSkeleton>[]).map(
-        (member) => mapEquipoMiembro(member),
-      )
+    ? (
+        rawListaEquipo.filter(isEntryLike) as Entry<EquipoMiembroSkeleton>[]
+      ).map((member) => mapEquipoMiembro(member))
     : undefined;
 
   return {
