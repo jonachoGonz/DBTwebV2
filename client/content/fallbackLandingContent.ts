@@ -49,6 +49,12 @@ export const fallbackLandingContent: LandingContent = {
     },
   ],
 
+  somosImagenUrl: undefined,
+  somosImagenAlt: undefined,
+  somosTitulo: "Your Care, Our Priority",
+  somosContenido:
+    "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad. Nuestro enfoque combina herramientas DBT con un espacio seguro y cercano para que puedas avanzar a tu ritmo.",
+
   serviciosTitulo: "Servicios",
   serviciosSubtitulo: "Cómo te acompañamos en tu proceso",
   serviciosCss: undefined,
