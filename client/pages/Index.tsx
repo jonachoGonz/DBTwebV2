@@ -55,7 +55,13 @@ export default function Index() {
         customCss={data.customCss}
       />
 
-      <ServicesSection id="servicios" services={data.services} />
+      <ServicesSection
+        id="servicios"
+        serviciosTitulo={data.serviciosTitulo}
+        serviciosSubtitulo={data.serviciosSubtitulo}
+        serviciosCss={data.serviciosCss}
+        listaServicios={data.listaServicios}
+      />
 
       <OurSpaceSection
         id="espacio"
