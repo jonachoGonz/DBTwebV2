@@ -5,7 +5,9 @@ type AboutSectionProps = {
   somosImagenUrl?: PaginaInicioContent["somosImagenUrl"];
   somosImagenAlt?: PaginaInicioContent["somosImagenAlt"];
   somosTitulo?: PaginaInicioContent["somosTitulo"];
+  somosSubtitulo?: PaginaInicioContent["somosSubtitulo"];
   somosContenido?: PaginaInicioContent["somosContenido"];
+  somosCss?: PaginaInicioContent["somosCss"];
 };
 
 export default function AboutSection({
@@ -13,12 +15,16 @@ export default function AboutSection({
   somosImagenUrl,
   somosImagenAlt,
   somosTitulo,
+  somosSubtitulo,
   somosContenido,
+  somosCss,
 }: AboutSectionProps) {
-  const title = somosTitulo || "Your Care, Our Priority";
+  const title = somosTitulo || "Sobre nosotros";
 
   return (
     <section id={id} aria-label="Sobre nosotros">
+      {somosCss ? <style>{somosCss}</style> : null}
+
       <div id="somosContainer" className="py-5">
         <div className="container py-lg-5">
           <div className="row align-items-center g-5">
@@ -36,6 +42,10 @@ export default function AboutSection({
             </div>
 
             <div className="col-12 col-lg-6 mt-4 mt-lg-0">
+              {somosSubtitulo ? (
+                <div className="somosEyebrow">{somosSubtitulo}</div>
+              ) : null}
+
               <h2 className="somosTitle">{title}</h2>
 
               {somosContenido ? (
@@ -63,6 +73,14 @@ export default function AboutSection({
           aspect-ratio: 4 / 3;
           border-radius: 30px;
           background: linear-gradient(135deg, #f4f1e7, #ebe6d9);
+        }
+
+        #somosContainer .somosEyebrow {
+          font-size: 12px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(57, 68, 43, 0.72);
+          margin-bottom: 12px;
         }
 
         #somosContainer .somosTitle {
