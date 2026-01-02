@@ -1,4 +1,5 @@
 import HeroSection from "@/components/landing/HeroSection";
+import AboutSection from "@/components/landing/AboutSection";
 import ServicesSection from "@/components/landing/ServicesSection";
 import BookingSection from "@/components/landing/BookingSection";
 import OurSpaceSection from "@/components/landing/OurSpaceSection";
@@ -53,6 +54,16 @@ export default function Index() {
         heroSecondaryCtaText={data.heroSecondaryCtaText}
         heroSecondaryCtaLink={data.heroSecondaryCtaLink}
         customCss={data.customCss}
+      />
+
+      <AboutSection
+        id="somos"
+        somosImagenUrl={data.somosImagenUrl}
+        somosImagenAlt={data.somosImagenAlt}
+        somosTitulo={data.somosTitulo}
+        somosSubtitulo={data.somosSubtitulo}
+        somosContenido={data.somosContenido}
+        somosCss={data.somosCss}
       />
 
       <ServicesSection
