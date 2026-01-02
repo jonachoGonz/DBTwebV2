@@ -1,29 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { fallbackLandingContent } from "@/content/fallbackLandingContent";
 import type { LandingContent } from "@/types/contentful";
-import {
-  fetchPaginaInicio,
-  fetchSeccionServicios,
-} from "@/services/contentful";
+import { fetchPaginaInicio } from "@/services/contentful";
 
 async function fetchLandingContent(): Promise<LandingContent> {
   try {
-    const [paginaInicio, services] = await Promise.all([
-      fetchPaginaInicio(),
-      fetchSeccionServicios(),
-    ]);
+    const paginaInicio = await fetchPaginaInicio();
 
-    const base = paginaInicio
+    return paginaInicio
       ? { ...fallbackLandingContent, ...paginaInicio }
       : fallbackLandingContent;
-
-    return {
-      ...base,
-      services:
-        services && services.length > 0
-          ? services
-          : fallbackLandingContent.services,
-    };
   } catch (error) {
     console.error("[useContentfulData] Error fetching landing content:", error);
     throw error;
