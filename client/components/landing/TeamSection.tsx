@@ -220,19 +220,39 @@ function TeamModal({
       }}
     >
       <div className="teamModalCard" role="document">
-        <div className="teamModalCloseRow">
-          <button
-            ref={closeRef}
-            type="button"
-            className="teamModalClose"
-            onClick={onClose}
+        <button
+          ref={closeRef}
+          type="button"
+          className="teamModalCloseIcon"
+          onClick={onClose}
+          aria-label="Cerrar"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
           >
-            Cerrar
-          </button>
-        </div>
+            <path
+              d="M6 6L18 18"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <path
+              d="M18 6L6 18"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
 
-        <div className="row g-4 align-items-start">
-          <div className="col-12 col-lg-5">
+        <div className="teamModalBody">
+          <div className="teamModalLeft">
             <div className="teamModalMedia">
               {member.imagenUrl ? (
                 <img
@@ -247,57 +267,59 @@ function TeamModal({
             </div>
           </div>
 
-          <div className="col-12 col-lg-7">
-            <div className="teamModalTitle">{member.nombre}</div>
-            {member.rol ? (
-              <div className="teamModalRole">{member.rol}</div>
-            ) : null}
+          <div className="teamModalRight">
+            <div className="teamModalRightInner">
+              <div className="teamModalTitle">{member.nombre}</div>
+              {member.rol ? <div className="teamModalRole">{member.rol}</div> : null}
 
-            {member.linkedinUrl || member.instagramUrl ? (
-              <div className="teamModalSocial">
-                {member.linkedinUrl ? (
-                  <a
-                    href={member.linkedinUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="teamModalIcon"
-                    aria-label="LinkedIn"
-                  >
-                    <LinkedInMark size={18} />
-                  </a>
-                ) : null}
+              {member.linkedinUrl || member.instagramUrl ? (
+                <div className="teamModalSocial">
+                  {member.linkedinUrl ? (
+                    <a
+                      href={member.linkedinUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="teamModalIcon"
+                      aria-label="LinkedIn"
+                    >
+                      <LinkedInMark size={18} />
+                    </a>
+                  ) : null}
 
-                {member.instagramUrl ? (
-                  <a
-                    href={member.instagramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="teamModalIcon"
-                    aria-label="Instagram"
-                  >
-                    <InstagramMark size={18} />
-                  </a>
-                ) : null}
-              </div>
-            ) : null}
+                  {member.instagramUrl ? (
+                    <a
+                      href={member.instagramUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="teamModalIcon"
+                      aria-label="Instagram"
+                    >
+                      <InstagramMark size={18} />
+                    </a>
+                  ) : null}
+                </div>
+              ) : null}
 
-            {member.descripcion ? (
-              <div className="teamModalSection">
-                <div className="teamModalSectionTitle">Bio</div>
-                <div className="teamModalSectionBody">{member.descripcion}</div>
-              </div>
-            ) : null}
+              {member.descripcion ? (
+                <div className="teamModalSection">
+                  <div className="teamModalSectionTitle">Bio</div>
+                  <div className="teamModalSectionBody">{member.descripcion}</div>
+                </div>
+              ) : null}
 
-            {member.formacion ? (
-              <div className="teamModalSection">
-                <div className="teamModalSectionTitle">Formación</div>
-                <div className="teamModalSectionBody">{member.formacion}</div>
-              </div>
-            ) : null}
+              {member.formacion ? (
+                <div className="teamModalSection">
+                  <div className="teamModalSectionTitle">Formación</div>
+                  <div className="teamModalSectionBody">{member.formacion}</div>
+                </div>
+              ) : null}
+            </div>
 
-            <a className="teamModalCta" href={agendaHref}>
-              Agendar hora
-            </a>
+            <div className="teamModalCtaSticky">
+              <a className="teamModalCta" href={agendaHref}>
+                Agendar hora
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -628,41 +650,54 @@ export default function TeamSection({
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 18px;
+          padding: 0;
           z-index: 1050;
         }
 
         .teamModalCard {
-          width: 100%;
-          max-width: 980px;
+          position: relative;
+          width: 100vw;
+          height: 100vh;
           background: rgb(253, 251, 247);
-          border-radius: 22px;
-          padding: 18px;
-          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
-          max-height: calc(100vh - 36px);
+          border-radius: 0;
+          box-shadow: none;
+          overflow: hidden;
+        }
+
+        .teamModalCloseIcon {
+          position: absolute;
+          top: 14px;
+          right: 14px;
+          z-index: 5;
+          width: 44px;
+          height: 44px;
+          border-radius: 9999px;
+          border: 1px solid rgba(57, 68, 43, 0.22);
+          background: rgba(253, 251, 247, 0.65);
+          color: rgba(57, 68, 43, 0.9);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: transform 160ms ease, opacity 160ms ease;
+        }
+
+        .teamModalCloseIcon:hover {
+          transform: translateY(-1px);
+          opacity: 0.9;
+        }
+
+        .teamModalBody {
+          height: 100%;
           overflow: auto;
         }
 
-        .teamModalCloseRow {
-          display: flex;
-          justify-content: flex-end;
-          margin-bottom: 8px;
-        }
-
-        .teamModalClose {
-          border: 1px solid rgba(57, 68, 43, 0.35);
-          background: transparent;
-          color: rgba(57, 68, 43, 0.9);
-          border-radius: 9999px;
-          padding: 8px 14px;
-          font-size: 13px;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          cursor: pointer;
+        .teamModalLeft {
+          width: 100%;
         }
 
         .teamModalMedia {
-          border-radius: 18px;
+          border-radius: 0;
           overflow: hidden;
           background: rgba(0, 0, 0, 0.06);
           aspect-ratio: 3 / 4;
@@ -679,6 +714,14 @@ export default function TeamSection({
           width: 100%;
           height: 100%;
           background: linear-gradient(135deg, #f4f1e7, #ebe6d9);
+        }
+
+        .teamModalRight {
+          width: 100%;
+        }
+
+        .teamModalRightInner {
+          padding: 22px 18px 120px;
         }
 
         .teamModalTitle {
@@ -740,11 +783,20 @@ export default function TeamSection({
           white-space: pre-line;
         }
 
+        .teamModalCtaSticky {
+          position: sticky;
+          bottom: 0;
+          width: 100%;
+          background: rgb(253, 251, 247);
+          padding: 14px 18px 18px;
+          border-top: 1px solid rgba(57, 68, 43, 0.12);
+        }
+
         .teamModalCta {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          margin-top: 22px;
+          width: 100%;
           padding: 12px 16px;
           border-radius: 9999px;
           background: rgb(57, 68, 43);
@@ -759,6 +811,53 @@ export default function TeamSection({
         .teamModalCta:hover {
           transform: translateY(-1px);
           opacity: 0.92;
+        }
+
+        /* Desktop split: fixed image + scrollable right content */
+        @media (min-width: 992px) {
+          .teamModalOverlay {
+            padding: 18px;
+          }
+
+          .teamModalCard {
+            width: 80vw;
+            max-width: 80vw;
+            height: 85vh;
+            border-radius: 22px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+          }
+
+          .teamModalBody {
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+          }
+
+          .teamModalLeft {
+            flex: 0 0 42%;
+            height: 100%;
+          }
+
+          .teamModalMedia {
+            height: 100%;
+            aspect-ratio: auto;
+            border-radius: 0;
+          }
+
+          .teamModalRight {
+            flex: 1 1 auto;
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .teamModalRightInner {
+            padding: 28px 26px 140px;
+          }
+
+          .teamModalCtaSticky {
+            padding: 16px 26px 20px;
+          }
         }
       `}</style>
     </section>
