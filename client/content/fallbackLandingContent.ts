@@ -49,27 +49,24 @@ export const fallbackLandingContent: LandingContent = {
     },
   ],
 
-  services: [
+  serviciosTitulo: "Servicios",
+  serviciosSubtitulo: "Cómo te acompañamos en tu proceso",
+  serviciosCss: undefined,
+  listaServicios: [
     {
       titulo: "Terapia DBT individual",
-      descripcion:
+      contenido:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enfoque estructurado para construir habilidades y objetivos medibles.",
-      iconoUrl: undefined,
-      iconoAlt: undefined,
     },
     {
       titulo: "Entrenamiento de habilidades",
-      descripcion:
+      contenido:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mindfulness, regulación emocional, efectividad interpersonal.",
-      iconoUrl: undefined,
-      iconoAlt: undefined,
     },
     {
       titulo: "Acompañamiento en crisis",
-      descripcion:
+      contenido:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Planes de seguridad, contención y herramientas prácticas.",
-      iconoUrl: undefined,
-      iconoAlt: undefined,
     },
   ],
 };

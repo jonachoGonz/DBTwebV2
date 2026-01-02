@@ -12,6 +12,11 @@ export type OurSpaceSlide = {
   enlace?: string;
 };
 
+export type ServicioItem = {
+  titulo: string;
+  contenido?: string;
+};
+
 export type PaginaInicioContent = {
   heroBackgroundImageUrl?: string;
   heroBackgroundImageAlt?: string;
@@ -38,8 +43,11 @@ export type PaginaInicioContent = {
   espacioLinkUrl?: string;
   espacioCss?: string;
   espacioSlides?: OurSpaceSlide[];
+
+  serviciosTitulo?: string;
+  serviciosSubtitulo?: string;
+  serviciosCss?: string;
+  listaServicios?: ServicioItem[];
 };
 
-export type LandingContent = PaginaInicioContent & {
-  services: LandingService[];
-};
+export type LandingContent = PaginaInicioContent;
