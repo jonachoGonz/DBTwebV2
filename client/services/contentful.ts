@@ -37,6 +37,12 @@ type PaginaInicioFields = {
   espacioCss?: unknown;
   espacioSlides?: unknown;
 
+  somosImagen?: unknown;
+  somosTitulo?: unknown;
+  somosSubtitulo?: unknown;
+  somosContenido?: unknown;
+  somosCss?: unknown;
+
   serviciosTitulo?: unknown;
   serviciosSubtitulo?: unknown;
   serviciosCss?: unknown;
@@ -246,6 +252,20 @@ export function mapPaginaInicio(
       )
     : undefined;
 
+  const somosImagenAsset = (fields.somosImagen ||
+    fields.aboutImage ||
+    fields.somosImage) as unknown as Asset | undefined;
+  const somosImagen = readAssetUrl(somosImagenAsset);
+
+  const somosTitulo = readString(fields.somosTitulo || fields.aboutTitle);
+  const somosSubtitulo = readString(fields.somosSubtitulo || fields.aboutSubtitle);
+
+  const somosContenido =
+    readString(fields.somosContenido || fields.aboutContent) ||
+    richTextToPlainText(fields.somosContenido || fields.aboutContent);
+
+  const somosCss = readString(fields.somosCss || fields.aboutCss);
+
   const serviciosTitulo = readString(fields.serviciosTitulo);
   const serviciosSubtitulo = readString(fields.serviciosSubtitulo);
   const serviciosCss = readString(fields.serviciosCss);
@@ -288,6 +308,13 @@ export function mapPaginaInicio(
     espacioLinkUrl,
     espacioCss,
     espacioSlides: slides,
+
+    somosImagenUrl: somosImagen.url,
+    somosImagenAlt: somosImagen.alt,
+    somosTitulo,
+    somosSubtitulo,
+    somosContenido,
+    somosCss,
 
     serviciosTitulo,
     serviciosSubtitulo,
