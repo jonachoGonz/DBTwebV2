@@ -5,6 +5,7 @@ import {
   type EntrySkeletonType,
 } from "contentful";
 import type {
+  EquipoMiembro,
   LandingService,
   OurSpaceSlide,
   PaginaInicioContent,
@@ -47,6 +48,12 @@ type PaginaInicioFields = {
   serviciosSubtitulo?: unknown;
   serviciosCss?: unknown;
   listaServicios?: unknown;
+
+  equipoTitulo?: unknown;
+  equipoDescripcion?: unknown;
+  equipoSubtitulo?: unknown;
+  equipoCss?: unknown;
+  listaEquipo?: unknown;
 };
 
 type PaginaInicioSkeleton = EntrySkeletonType<
@@ -82,6 +89,19 @@ type ServicioItemFields = {
 };
 
 type ServicioItemSkeleton = EntrySkeletonType<ServicioItemFields, "servicioItem">;
+
+type EquipoMiembroFields = {
+  nombre?: unknown;
+  rol?: unknown;
+  imagen?: unknown;
+  descripcion?: unknown;
+  formacion?: unknown;
+  linkedinUrl?: unknown;
+  instagramUrl?: unknown;
+  agendaUrl?: unknown;
+};
+
+type EquipoMiembroSkeleton = EntrySkeletonType<EquipoMiembroFields, "equipoMiembro">;
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0
@@ -187,6 +207,30 @@ function mapServicioItem(entry: Entry<ServicioItemSkeleton>): ServicioItem {
   };
 }
 
+function mapEquipoMiembro(entry: Entry<EquipoMiembroSkeleton>): EquipoMiembro {
+  const fields = entry.fields as any;
+  const imageAsset = (fields.imagen || fields.image || fields.foto) as unknown as
+    | Asset
+    | undefined;
+  const { url, alt } = readAssetUrl(imageAsset);
+
+  return {
+    nombre: readString(fields.nombre || fields.name) ?? "",
+    rol: readString(fields.rol || fields.role),
+    imagenUrl: url,
+    imagenAlt: alt,
+    descripcion:
+      readString(fields.descripcion || fields.bio) ||
+      richTextToPlainText(fields.descripcion || fields.bio),
+    formacion:
+      readString(fields.formacion || fields.education) ||
+      richTextToPlainText(fields.formacion || fields.education),
+    linkedinUrl: readString(fields.linkedinUrl || fields.linkedin || fields.linkedInUrl),
+    instagramUrl: readString(fields.instagramUrl || fields.instagram),
+    agendaUrl: readString(fields.agendaUrl || fields.bookingUrl || fields.agendarUrl),
+  };
+}
+
 export function mapPaginaInicio(
   entry: Entry<PaginaInicioSkeleton>,
 ): PaginaInicioContent {
@@ -280,6 +324,20 @@ export function mapPaginaInicio(
       )
     : undefined;
 
+  const equipoTitulo = readString(fields.equipoTitulo || fields.teamTitle);
+  const equipoDescripcion =
+    readString(fields.equipoDescripcion || fields.teamDescription) ||
+    richTextToPlainText(fields.equipoDescripcion || fields.teamDescription);
+  const equipoSubtitulo = readString(fields.equipoSubtitulo || fields.teamSubtitle);
+  const equipoCss = readString(fields.equipoCss || fields.teamCss);
+
+  const rawListaEquipo = (fields.listaEquipo || fields.teamMembers) as unknown;
+  const listaEquipo = Array.isArray(rawListaEquipo)
+    ? (rawListaEquipo.filter(isEntryLike) as Entry<EquipoMiembroSkeleton>[]).map(
+        (member) => mapEquipoMiembro(member),
+      )
+    : undefined;
+
   return {
     heroBackgroundImageUrl: background.url,
     heroBackgroundImageAlt: background.alt,
@@ -320,6 +378,12 @@ export function mapPaginaInicio(
     serviciosSubtitulo,
     serviciosCss,
     listaServicios,
+
+    equipoTitulo,
+    equipoDescripcion,
+    equipoSubtitulo,
+    equipoCss,
+    listaEquipo,
   };
 }
 
