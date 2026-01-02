@@ -173,54 +173,39 @@ export default function ServicesSection({
           paddingRight: 24,
         }}
       >
-        <div
-          style={{
-            maxWidth: 1240,
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr",
-              gap: 48,
-              alignItems: "start",
-            }}
-          >
-            <div
-              style={{
-                maxWidth: 520,
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: 'Georgia, "Times New Roman", Times, serif',
-                  fontSize: "clamp(3rem, 4.6vw, 4rem)",
-                  lineHeight: 0.95,
-                  letterSpacing: "-0.02em",
-                  color: "rgb(57, 68, 43)",
-                }}
-              >
-                {title}
-              </div>
-
-              {subtitle ? (
+        <div className="container px-0" style={{ maxWidth: 1240 }}>
+          <div className="row gx-5 gy-5 align-items-start">
+            <div className="col-12 col-lg-5 text-start">
+              <div className="servicesTitleSticky" style={{ maxWidth: 520 }}>
                 <div
                   style={{
-                    marginTop: 22,
+                    fontFamily: 'Georgia, "Times New Roman", Times, serif',
+                    fontSize: "clamp(3rem, 4.6vw, 4rem)",
+                    lineHeight: 0.95,
+                    letterSpacing: "-0.02em",
                     color: "rgb(57, 68, 43)",
-                    fontSize: 16,
-                    lineHeight: 1.45,
-                    maxWidth: 420,
                   }}
                 >
-                  {subtitle}
+                  {title}
                 </div>
-              ) : null}
+
+                {subtitle ? (
+                  <div
+                    style={{
+                      marginTop: 22,
+                      color: "rgb(57, 68, 43)",
+                      fontSize: 16,
+                      lineHeight: 1.45,
+                      maxWidth: 420,
+                    }}
+                  >
+                    {subtitle}
+                  </div>
+                ) : null}
+              </div>
             </div>
 
-            <div>
+            <div className="col-12 col-lg-7">
               <div style={{ width: "100%" }}>
                 {items.map((item, index) => (
                   <AccordionItem
@@ -241,9 +226,9 @@ export default function ServicesSection({
 
           <style>{`
             @media (min-width: 992px) {
-              #serviciosContainer > div > div {
-                grid-template-columns: 40% 60%;
-                gap: 72px;
+              #serviciosContainer .servicesTitleSticky {
+                position: sticky;
+                top: 20px;
               }
             }
           `}</style>
