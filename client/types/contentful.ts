@@ -17,6 +17,11 @@ export type ServicioItem = {
   contenido?: string;
 };
 
+export type TipoSesion = {
+  nombreSesion: string;
+  sesionEmbedCode: string;
+};
+
 export type EquipoMiembro = {
   nombre: string;
   rol?: string;
@@ -27,6 +32,7 @@ export type EquipoMiembro = {
   linkedinUrl?: string;
   instagramUrl?: string;
   agendaUrl?: string;
+  sesionesDisponibles?: TipoSesion[];
 };
 
 export type PaginaInicioContent = {
