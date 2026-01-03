@@ -200,7 +200,7 @@ export default function BookingSection({
                       key={`${parsed.username}/${parsed.eventSlug}`}
                       username={parsed.username}
                       eventSlug={parsed.eventSlug}
-                      view="month_view"
+                      view="MONTH_VIEW"
                       customClassNames={{
                         bookerContainer: "w-100 h-100 border-0",
                       }}
