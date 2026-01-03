@@ -166,8 +166,9 @@ export default function BookingSection({
                   <div className="alert alert-light border mt-3" role="status">
                     <div className="fw-semibold">Scheduling unavailable</div>
                     <div className="text-secondary small mt-1">
-                      La URL de Cal.com para “{formatMemberLabel(selectedMember)}”
-                      no es válida (debe incluir usuario y slug del evento).
+                      La URL de Cal.com para “
+                      {formatMemberLabel(selectedMember)}” no es válida (debe
+                      incluir usuario y slug del evento).
                     </div>
                   </div>
                 ) : null}
@@ -215,16 +216,20 @@ export default function BookingSection({
                     >
                       <div
                         style={{
-                          fontFamily: 'Georgia, "Times New Roman", Times, serif',
+                          fontFamily:
+                            'Georgia, "Times New Roman", Times, serif',
                           fontSize: 26,
                           color: "#39442B",
                         }}
                       >
                         Scheduling unavailable
                       </div>
-                      <div className="text-secondary mt-2" style={{ maxWidth: 520 }}>
-                        Selecciona un profesional con una URL válida de Cal.com (por
-                        ejemplo: https://cal.com/jon-doe/30min).
+                      <div
+                        className="text-secondary mt-2"
+                        style={{ maxWidth: 520 }}
+                      >
+                        Selecciona un profesional con una URL válida de Cal.com
+                        (por ejemplo: https://cal.com/jon-doe/30min).
                       </div>
                     </div>
                   )}
@@ -234,7 +239,8 @@ export default function BookingSection({
 
             {showEmbed && selectedMember ? (
               <div className="text-secondary small mt-3">
-                Mostrando disponibilidad para <strong>{selectedMember.nombre}</strong>.
+                Mostrando disponibilidad para{" "}
+                <strong>{selectedMember.nombre}</strong>.
               </div>
             ) : null}
           </div>
