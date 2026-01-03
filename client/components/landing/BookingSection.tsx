@@ -1,100 +1,244 @@
-import type { PaginaInicioContent } from "@/types/contentful";
+import { useEffect, useMemo, useState } from "react";
+import { BookerEmbed } from "@calcom/atoms";
+import type { EquipoMiembro, PaginaInicioContent } from "@/types/contentful";
 
 type BookingSectionProps = {
   id?: string;
   bookingTitulo: PaginaInicioContent["bookingTitulo"];
-  bookingUrl?: PaginaInicioContent["bookingUrl"];
+  listaEquipo?: PaginaInicioContent["listaEquipo"];
 };
 
-function isSafeUrl(url: string): boolean {
+type ParsedCalUrl = {
+  username: string;
+  eventSlug: string;
+};
+
+function parseCalUrl(url: string): ParsedCalUrl | null {
+  const trimmed = url.trim();
+  if (!trimmed) return null;
+
   try {
-    const parsed = new URL(url);
-    return parsed.protocol === "https:" || parsed.protocol === "http:";
+    const parsed = new URL(trimmed);
+    const hostname = parsed.hostname.toLowerCase();
+    if (!hostname.endsWith("cal.com")) return null;
+
+    const segments = parsed.pathname
+      .split("/")
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    if (segments.length < 2) return null;
+
+    const username = segments[0];
+    const eventSlug = segments[1];
+
+    if (!username || !eventSlug) return null;
+
+    return { username, eventSlug };
   } catch {
-    return false;
+    return null;
   }
+}
+
+function formatMemberLabel(member: EquipoMiembro): string {
+  return member.rol ? `${member.nombre} · ${member.rol}` : member.nombre;
 }
 
 export default function BookingSection({
   id,
   bookingTitulo,
-  bookingUrl,
+  listaEquipo,
 }: BookingSectionProps) {
-  const canEmbed = Boolean(bookingUrl && isSafeUrl(bookingUrl));
+  const members = useMemo(
+    () => (listaEquipo || []).filter((m) => m.nombre),
+    [listaEquipo],
+  );
+
+  const [selectedName, setSelectedName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (members.length === 0) {
+      setSelectedName(null);
+      return;
+    }
+
+    if (selectedName && members.some((m) => m.nombre === selectedName)) {
+      return;
+    }
+
+    setSelectedName(members[0].nombre);
+  }, [members, selectedName]);
+
+  const selectedMember = useMemo(() => {
+    if (members.length === 0) return null;
+    if (!selectedName) return members[0];
+    return members.find((m) => m.nombre === selectedName) ?? members[0];
+  }, [members, selectedName]);
+
+  const parsed = useMemo(() => {
+    const url = selectedMember?.agendaUrl;
+    return url ? parseCalUrl(url) : null;
+  }, [selectedMember?.agendaUrl]);
+
+  const showEmbed = Boolean(selectedMember && parsed);
 
   return (
-    <section id={id} className="py-5" style={{ backgroundColor: "#f6fbfa" }}>
+    <section id={id} className="py-5" style={{ backgroundColor: "#fdfbf7" }}>
       <div className="container py-lg-4">
-        <div className="row align-items-end g-3 mb-4">
-          <div className="col-12 col-lg-7">
-            <h2 className="h1 fw-bold mb-2">{bookingTitulo}</h2>
-            <p className="text-secondary mb-0">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elige un
-              horario y confirma tu reserva.
+        <div className="row g-4 g-lg-5 align-items-start">
+          <div className="col-12 col-lg-4">
+            <h2
+              style={{
+                fontFamily: 'Georgia, "Times New Roman", Times, serif',
+                fontSize: "clamp(2rem, 3.6vw, 3rem)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.02em",
+                color: "#39442B",
+                margin: 0,
+              }}
+            >
+              {bookingTitulo}
+            </h2>
+
+            <p className="text-secondary mt-3" style={{ lineHeight: 1.6 }}>
+              Elige un profesional y revisa la disponibilidad en el calendario.
             </p>
-          </div>
-          <div className="col-12 col-lg-5 text-lg-end">
-            <div className="text-secondary small">
-              Si no encuentras disponibilidad, contáctanos para alternativas.
-            </div>
-          </div>
-        </div>
 
-        {canEmbed ? (
-          <div className="card border-0 shadow-sm overflow-hidden">
-            <div className="card-body p-0">
-              <div className="ratio ratio-4x3">
-                <iframe
-                  src={bookingUrl}
-                  title="Booking widget"
-                  loading="lazy"
-                  style={{ border: 0 }}
-                  allow="camera; microphone; fullscreen"
-                />
-              </div>
-            </div>
-            <div className="card-footer bg-white border-0 p-4">
-              <div className="text-secondary small">
-                Nota: este widget es un ejemplo. Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit.
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="row g-4">
-            <div className="col-12 col-lg-7">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body p-4 p-lg-5">
-                  <h3 className="h5 fw-semibold">Agenda en 3 pasos</h3>
-                  <ol className="text-secondary mt-3 mb-0">
-                    <li>Elige un horario disponible.</li>
-                    <li>Confirma tus datos de contacto.</li>
-                    <li>Recibe un email con los detalles de la sesión.</li>
-                  </ol>
+            {members.length > 0 ? (
+              <div className="mt-4">
+                <div
+                  className="text-secondary"
+                  style={{
+                    fontSize: 12,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Profesionales
                 </div>
-              </div>
-            </div>
 
-            <div className="col-12 col-lg-5">
-              <div className="card border-0 shadow-sm">
-                <div className="card-body p-4 p-lg-5">
-                  <h3 className="h5 fw-semibold">Widget no configurado</h3>
-                  <p className="text-secondary mt-3 mb-4">
-                    Aún no se ha definido <strong>bookingUrl</strong> en el CMS.
-                    Mientras tanto, mostramos este bloque de contenido.
-                  </p>
+                <div className="list-group mt-2">
+                  {members.map((member) => {
+                    const active = member.nombre === selectedMember?.nombre;
+                    return (
+                      <button
+                        key={member.nombre}
+                        type="button"
+                        className={`list-group-item list-group-item-action d-flex flex-column align-items-start gap-1 ${
+                          active ? "active" : ""
+                        }`}
+                        onClick={() => setSelectedName(member.nombre)}
+                        aria-pressed={active}
+                        style={{
+                          borderRadius: 14,
+                          border: "1px solid rgba(57,68,43,0.18)",
+                          marginBottom: 10,
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontFamily:
+                              'Georgia, "Times New Roman", Times, serif',
+                            fontSize: 18,
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {member.nombre}
+                        </div>
+                        {member.rol ? (
+                          <div
+                            style={{
+                              fontSize: 12,
+                              letterSpacing: "0.14em",
+                              textTransform: "uppercase",
+                              opacity: 0.85,
+                            }}
+                          >
+                            {member.rol}
+                          </div>
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
 
-                  <div className="p-3 rounded-3 border bg-light">
-                    <div className="fw-semibold">Horario de ejemplo</div>
+                {selectedMember?.agendaUrl && !parsed ? (
+                  <div className="alert alert-light border mt-3" role="status">
+                    <div className="fw-semibold">Scheduling unavailable</div>
                     <div className="text-secondary small mt-1">
-                      Lun–Vie • 9:00–18:00 • Online y presencial
+                      La URL de Cal.com para “{formatMemberLabel(selectedMember)}”
+                      no es válida (debe incluir usuario y slug del evento).
                     </div>
                   </div>
+                ) : null}
+
+                {!selectedMember?.agendaUrl ? (
+                  <div className="alert alert-light border mt-3" role="status">
+                    <div className="fw-semibold">Scheduling unavailable</div>
+                    <div className="text-secondary small mt-1">
+                      Este profesional no tiene agenda configurada.
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <div className="alert alert-light border mt-4" role="status">
+                <div className="fw-semibold">Scheduling unavailable</div>
+                <div className="text-secondary small mt-1">
+                  No hay profesionales configurados en el CMS.
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="col-12 col-lg-8">
+            <div className="card border-0 shadow-sm overflow-hidden">
+              <div className="card-body p-0">
+                <div style={{ minHeight: 640 }}>
+                  {showEmbed && parsed ? (
+                    <BookerEmbed
+                      key={`${parsed.username}/${parsed.eventSlug}`}
+                      username={parsed.username}
+                      eventSlug={parsed.eventSlug}
+                      view="month_view"
+                      customClassNames={{
+                        bookerContainer: "w-100 h-100 border-0",
+                      }}
+                      onCreateBookingSuccess={() =>
+                        console.log("Booking confirmed")
+                      }
+                    />
+                  ) : (
+                    <div
+                      className="d-flex flex-column align-items-center justify-content-center text-center p-4"
+                      style={{ minHeight: 640 }}
+                    >
+                      <div
+                        style={{
+                          fontFamily: 'Georgia, "Times New Roman", Times, serif',
+                          fontSize: 26,
+                          color: "#39442B",
+                        }}
+                      >
+                        Scheduling unavailable
+                      </div>
+                      <div className="text-secondary mt-2" style={{ maxWidth: 520 }}>
+                        Selecciona un profesional con una URL válida de Cal.com (por
+                        ejemplo: https://cal.com/jon-doe/30min).
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
+
+            {showEmbed && selectedMember ? (
+              <div className="text-secondary small mt-3">
+                Mostrando disponibilidad para <strong>{selectedMember.nombre}</strong>.
+              </div>
+            ) : null}
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
