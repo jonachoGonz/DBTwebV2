@@ -229,8 +229,9 @@ function mapTipoSesion(entry: Entry<TipoSesionSkeleton>): TipoSesion {
     nombreSesion:
       readString(fields.nombreSesion || fields.nombre || fields.name) ?? "",
     sesionEmbedCode:
-      readString(fields.sesionEmbedCode || fields.embedCode || fields.codigoEmbed) ??
-      "",
+      readString(
+        fields.sesionEmbedCode || fields.embedCode || fields.codigoEmbed,
+      ) ?? "",
   };
 }
 
@@ -244,7 +245,9 @@ function mapEquipoMiembro(entry: Entry<EquipoMiembroSkeleton>): EquipoMiembro {
   const rawSesionesDisponibles = fields.sesionesDisponibles as unknown;
   const sesionesDisponibles = Array.isArray(rawSesionesDisponibles)
     ? (
-        rawSesionesDisponibles.filter(isEntryLike) as Entry<TipoSesionSkeleton>[]
+        rawSesionesDisponibles.filter(
+          isEntryLike,
+        ) as Entry<TipoSesionSkeleton>[]
       ).map((sesion) => mapTipoSesion(sesion))
     : undefined;
 

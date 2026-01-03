@@ -106,7 +106,9 @@ export default function BookingSection({
   const selectedMember = useMemo(() => {
     if (members.length === 0) return null;
     if (selection?.memberName) {
-      return members.find((m) => m.nombre === selection.memberName) ?? members[0];
+      return (
+        members.find((m) => m.nombre === selection.memberName) ?? members[0]
+      );
     }
     return members[0];
   }, [members, selection?.memberName]);
@@ -143,7 +145,8 @@ export default function BookingSection({
             </h2>
 
             <p className="text-secondary mt-3" style={{ lineHeight: 1.6 }}>
-              Selecciona un profesional y el tipo de sesión para ver disponibilidad.
+              Selecciona un profesional y el tipo de sesión para ver
+              disponibilidad.
             </p>
 
             {members.length > 0 ? (
@@ -162,7 +165,8 @@ export default function BookingSection({
                 <div className="d-flex flex-column gap-3 mt-2">
                   {members.map((member) => {
                     const sessions = member.sesionesDisponibles ?? [];
-                    const activeMember = member.nombre === selectedMember?.nombre;
+                    const activeMember =
+                      member.nombre === selectedMember?.nombre;
 
                     return (
                       <div
@@ -178,7 +182,8 @@ export default function BookingSection({
                       >
                         <div
                           style={{
-                            fontFamily: 'Georgia, "Times New Roman", Times, serif',
+                            fontFamily:
+                              'Georgia, "Times New Roman", Times, serif',
                             fontSize: 18,
                             lineHeight: 1.2,
                             color: "#39442B",
@@ -186,7 +191,6 @@ export default function BookingSection({
                         >
                           {member.nombre}
                         </div>
-
 
                         {sessions.length > 0 ? (
                           <div className="d-flex flex-wrap gap-2 mt-3">
@@ -219,7 +223,9 @@ export default function BookingSection({
                                     border: active
                                       ? "1px solid #39442B"
                                       : "1px solid rgba(57,68,43,0.35)",
-                                    background: active ? "#39442B" : "transparent",
+                                    background: active
+                                      ? "#39442B"
+                                      : "transparent",
                                     color: active ? "#ffffff" : "#39442B",
                                     fontWeight: active ? 600 : 500,
                                     padding: "6px 12px",
@@ -271,15 +277,20 @@ export default function BookingSection({
                     >
                       <div
                         style={{
-                          fontFamily: 'Georgia, "Times New Roman", Times, serif',
+                          fontFamily:
+                            'Georgia, "Times New Roman", Times, serif',
                           fontSize: 26,
                           color: "#39442B",
                         }}
                       >
                         Agenda no disponible
                       </div>
-                      <div className="text-secondary mt-2" style={{ maxWidth: 520 }}>
-                        Configura al menos una sesión con su código embed en el CMS.
+                      <div
+                        className="text-secondary mt-2"
+                        style={{ maxWidth: 520 }}
+                      >
+                        Configura al menos una sesión con su código embed en el
+                        CMS.
                       </div>
                     </div>
                   )}
@@ -292,8 +303,8 @@ export default function BookingSection({
                 {selectedSession?.nombreSesion ? (
                   <>
                     Mostrando disponibilidad para{" "}
-                    <strong>{formatMemberLabel(selectedMember)}</strong> ({
-                    selectedSession.nombreSesion}).
+                    <strong>{formatMemberLabel(selectedMember)}</strong> (
+                    {selectedSession.nombreSesion}).
                   </>
                 ) : (
                   <>
