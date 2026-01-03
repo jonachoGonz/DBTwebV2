@@ -97,7 +97,7 @@ export default function Index() {
       <BookingSection
         id="contacto"
         bookingTitulo={data.bookingTitulo}
-        bookingUrl={data.bookingUrl}
+        listaEquipo={data.listaEquipo}
       />
     </div>
   );
