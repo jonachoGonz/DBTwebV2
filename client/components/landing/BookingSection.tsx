@@ -13,7 +13,7 @@ type Selection = {
 };
 
 function formatMemberLabel(member: EquipoMiembro): string {
-  return member.rol ? `${member.nombre} · ${member.rol}` : member.nombre;
+  return member.nombre;
 }
 
 function buildSrcDoc(embedCode: string): string {
@@ -187,19 +187,6 @@ export default function BookingSection({
                           {member.nombre}
                         </div>
 
-                        {member.rol ? (
-                          <div
-                            className="text-secondary"
-                            style={{
-                              fontSize: 12,
-                              letterSpacing: "0.14em",
-                              textTransform: "uppercase",
-                              marginTop: 2,
-                            }}
-                          >
-                            {member.rol}
-                          </div>
-                        ) : null}
 
                         {sessions.length > 0 ? (
                           <div className="d-flex flex-wrap gap-2 mt-3">
