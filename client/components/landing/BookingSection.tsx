@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { BookerEmbed } from "@calcom/atoms";
 import type { EquipoMiembro, PaginaInicioContent } from "@/types/contentful";
 
 type BookingSectionProps = {
@@ -8,40 +7,51 @@ type BookingSectionProps = {
   listaEquipo?: PaginaInicioContent["listaEquipo"];
 };
 
-type ParsedCalUrl = {
-  username: string;
-  eventSlug: string;
+type Selection = {
+  memberName: string;
+  sessionIndex: number;
 };
-
-function parseCalUrl(url: string): ParsedCalUrl | null {
-  const trimmed = url.trim();
-  if (!trimmed) return null;
-
-  try {
-    const parsed = new URL(trimmed);
-    const hostname = parsed.hostname.toLowerCase();
-    if (!hostname.endsWith("cal.com")) return null;
-
-    const segments = parsed.pathname
-      .split("/")
-      .map((part) => part.trim())
-      .filter(Boolean);
-
-    if (segments.length < 2) return null;
-
-    const username = segments[0];
-    const eventSlug = segments[1];
-
-    if (!username || !eventSlug) return null;
-
-    return { username, eventSlug };
-  } catch {
-    return null;
-  }
-}
 
 function formatMemberLabel(member: EquipoMiembro): string {
   return member.rol ? `${member.nombre} · ${member.rol}` : member.nombre;
+}
+
+function buildSrcDoc(embedCode: string): string {
+  return `<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+      body { overflow: hidden; }
+      iframe { width: 100%; height: 100%; border: 0; display: block; }
+    </style>
+  </head>
+  <body>
+    ${embedCode}
+  </body>
+</html>`;
+}
+
+function findFirstAvailableSelection(members: EquipoMiembro[]): {
+  selection: Selection;
+  embedCode: string;
+} | null {
+  for (const member of members) {
+    const sessions = member.sesionesDisponibles ?? [];
+    for (let i = 0; i < sessions.length; i += 1) {
+      const code = sessions[i]?.sesionEmbedCode?.trim();
+      if (code) {
+        return {
+          selection: { memberName: member.nombre, sessionIndex: i },
+          embedCode: code,
+        };
+      }
+    }
+  }
+
+  return null;
 }
 
 export default function BookingSection({
@@ -50,37 +60,69 @@ export default function BookingSection({
   listaEquipo,
 }: BookingSectionProps) {
   const members = useMemo(
-    () => (listaEquipo || []).filter((m) => m.nombre),
+    () => (listaEquipo || []).filter((m) => Boolean(m?.nombre)),
     [listaEquipo],
   );
 
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [selection, setSelection] = useState<Selection | null>(null);
+  const [selectedEmbedCode, setSelectedEmbedCode] = useState<string>("");
 
   useEffect(() => {
     if (members.length === 0) {
-      setSelectedName(null);
+      setSelection(null);
+      setSelectedEmbedCode("");
       return;
     }
 
-    if (selectedName && members.some((m) => m.nombre === selectedName)) {
+    const currentMember = selection
+      ? members.find((m) => m.nombre === selection.memberName)
+      : null;
+
+    const currentSession =
+      currentMember?.sesionesDisponibles?.[selection?.sessionIndex ?? -1];
+
+    if (currentMember && currentSession?.sesionEmbedCode) {
+      const normalized = currentSession.sesionEmbedCode.trim();
+      if (normalized && normalized !== selectedEmbedCode) {
+        setSelectedEmbedCode(normalized);
+      }
       return;
     }
 
-    setSelectedName(members[0].nombre);
-  }, [members, selectedName]);
+    const first = findFirstAvailableSelection(members);
+    if (first) {
+      setSelection(first.selection);
+      setSelectedEmbedCode(first.embedCode);
+      return;
+    }
+
+    // If there are members but none has an embed code, still select the first
+    // member so the UI shows the proper empty-state message.
+    if (!selection) {
+      setSelection({ memberName: members[0].nombre, sessionIndex: 0 });
+    }
+  }, [members, selection, selectedEmbedCode]);
 
   const selectedMember = useMemo(() => {
     if (members.length === 0) return null;
-    if (!selectedName) return members[0];
-    return members.find((m) => m.nombre === selectedName) ?? members[0];
-  }, [members, selectedName]);
+    if (selection?.memberName) {
+      return members.find((m) => m.nombre === selection.memberName) ?? members[0];
+    }
+    return members[0];
+  }, [members, selection?.memberName]);
 
-  const parsed = useMemo(() => {
-    const url = selectedMember?.agendaUrl;
-    return url ? parseCalUrl(url) : null;
-  }, [selectedMember?.agendaUrl]);
+  const selectedSession = useMemo(() => {
+    if (!selectedMember) return null;
+    const index = selection?.sessionIndex ?? 0;
+    return selectedMember.sesionesDisponibles?.[index] ?? null;
+  }, [selectedMember, selection?.sessionIndex]);
 
-  const showEmbed = Boolean(selectedMember && parsed);
+  const srcDoc = useMemo(() => {
+    if (!selectedEmbedCode.trim()) return "";
+    return buildSrcDoc(selectedEmbedCode);
+  }, [selectedEmbedCode]);
+
+  const showEmbed = Boolean(srcDoc);
 
   return (
     <section id={id} className="py-5" style={{ backgroundColor: "#fdfbf7" }}>
@@ -101,7 +143,7 @@ export default function BookingSection({
             </h2>
 
             <p className="text-secondary mt-3" style={{ lineHeight: 1.6 }}>
-              Elige un profesional y revisa la disponibilidad en el calendario.
+              Selecciona un profesional y el tipo de sesión para ver disponibilidad.
             </p>
 
             {members.length > 0 ? (
@@ -117,74 +159,103 @@ export default function BookingSection({
                   Profesionales
                 </div>
 
-                <div className="list-group mt-2">
+                <div className="d-flex flex-column gap-3 mt-2">
                   {members.map((member) => {
-                    const active = member.nombre === selectedMember?.nombre;
+                    const sessions = member.sesionesDisponibles ?? [];
+                    const activeMember = member.nombre === selectedMember?.nombre;
+
                     return (
-                      <button
+                      <div
                         key={member.nombre}
-                        type="button"
-                        className={`list-group-item list-group-item-action d-flex flex-column align-items-start gap-1 ${
-                          active ? "active" : ""
-                        }`}
-                        onClick={() => setSelectedName(member.nombre)}
-                        aria-pressed={active}
                         style={{
-                          borderRadius: 14,
-                          border: "1px solid rgba(57,68,43,0.18)",
-                          marginBottom: 10,
+                          borderRadius: 16,
+                          border: activeMember
+                            ? "1px solid rgba(57,68,43,0.5)"
+                            : "1px solid rgba(57,68,43,0.18)",
+                          background: "rgba(255,255,255,0.7)",
+                          padding: 14,
                         }}
                       >
                         <div
                           style={{
-                            fontFamily:
-                              'Georgia, "Times New Roman", Times, serif',
+                            fontFamily: 'Georgia, "Times New Roman", Times, serif',
                             fontSize: 18,
                             lineHeight: 1.2,
+                            color: "#39442B",
                           }}
                         >
                           {member.nombre}
                         </div>
+
                         {member.rol ? (
                           <div
+                            className="text-secondary"
                             style={{
                               fontSize: 12,
                               letterSpacing: "0.14em",
                               textTransform: "uppercase",
-                              opacity: 0.85,
+                              marginTop: 2,
                             }}
                           >
                             {member.rol}
                           </div>
                         ) : null}
-                      </button>
+
+                        {sessions.length > 0 ? (
+                          <div className="d-flex flex-wrap gap-2 mt-3">
+                            {sessions.map((session, index) => {
+                              const active =
+                                selection?.memberName === member.nombre &&
+                                selection?.sessionIndex === index;
+
+                              const label = session.nombreSesion?.trim()
+                                ? session.nombreSesion
+                                : `Sesión ${index + 1}`;
+
+                              return (
+                                <button
+                                  key={`${member.nombre}-${label}-${index}`}
+                                  type="button"
+                                  className="btn btn-sm"
+                                  onClick={() => {
+                                    setSelection({
+                                      memberName: member.nombre,
+                                      sessionIndex: index,
+                                    });
+                                    setSelectedEmbedCode(
+                                      session.sesionEmbedCode?.trim() ?? "",
+                                    );
+                                  }}
+                                  aria-pressed={active}
+                                  style={{
+                                    borderRadius: 999,
+                                    border: active
+                                      ? "1px solid #39442B"
+                                      : "1px solid rgba(57,68,43,0.35)",
+                                    background: active ? "#39442B" : "transparent",
+                                    color: active ? "#ffffff" : "#39442B",
+                                    fontWeight: active ? 600 : 500,
+                                    padding: "6px 12px",
+                                  }}
+                                >
+                                  {label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="text-secondary small mt-3">
+                            Este profesional no tiene sesiones configuradas.
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
-
-                {selectedMember?.agendaUrl && !parsed ? (
-                  <div className="alert alert-light border mt-3" role="status">
-                    <div className="fw-semibold">Scheduling unavailable</div>
-                    <div className="text-secondary small mt-1">
-                      La URL de Cal.com para “
-                      {formatMemberLabel(selectedMember)}” no es válida (debe
-                      incluir usuario y slug del evento).
-                    </div>
-                  </div>
-                ) : null}
-
-                {!selectedMember?.agendaUrl ? (
-                  <div className="alert alert-light border mt-3" role="status">
-                    <div className="fw-semibold">Scheduling unavailable</div>
-                    <div className="text-secondary small mt-1">
-                      Este profesional no tiene agenda configurada.
-                    </div>
-                  </div>
-                ) : null}
               </div>
             ) : (
               <div className="alert alert-light border mt-4" role="status">
-                <div className="fw-semibold">Scheduling unavailable</div>
+                <div className="fw-semibold">Agenda no disponible</div>
                 <div className="text-secondary small mt-1">
                   No hay profesionales configurados en el CMS.
                 </div>
@@ -196,18 +267,15 @@ export default function BookingSection({
             <div className="card border-0 shadow-sm overflow-hidden">
               <div className="card-body p-0">
                 <div style={{ minHeight: 640 }}>
-                  {showEmbed && parsed ? (
-                    <BookerEmbed
-                      key={`${parsed.username}/${parsed.eventSlug}`}
-                      username={parsed.username}
-                      eventSlug={parsed.eventSlug}
-                      view="MONTH_VIEW"
-                      customClassNames={{
-                        bookerContainer: "w-100 h-100 border-0",
-                      }}
-                      onCreateBookingSuccess={() =>
-                        console.log("Booking confirmed")
-                      }
+                  {showEmbed ? (
+                    <iframe
+                      key={`${selection?.memberName ?? ""}-${selection?.sessionIndex ?? 0}`}
+                      title="Agenda"
+                      srcDoc={srcDoc}
+                      style={{ width: "100%", height: 640, border: 0 }}
+                      loading="lazy"
+                      sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation-by-user-activation"
+                      referrerPolicy="no-referrer-when-downgrade"
                     />
                   ) : (
                     <div
@@ -216,20 +284,15 @@ export default function BookingSection({
                     >
                       <div
                         style={{
-                          fontFamily:
-                            'Georgia, "Times New Roman", Times, serif',
+                          fontFamily: 'Georgia, "Times New Roman", Times, serif',
                           fontSize: 26,
                           color: "#39442B",
                         }}
                       >
-                        Scheduling unavailable
+                        Agenda no disponible
                       </div>
-                      <div
-                        className="text-secondary mt-2"
-                        style={{ maxWidth: 520 }}
-                      >
-                        Selecciona un profesional con una URL válida de Cal.com
-                        (por ejemplo: https://cal.com/jon-doe/30min).
+                      <div className="text-secondary mt-2" style={{ maxWidth: 520 }}>
+                        Configura al menos una sesión con su código embed en el CMS.
                       </div>
                     </div>
                   )}
@@ -237,10 +300,20 @@ export default function BookingSection({
               </div>
             </div>
 
-            {showEmbed && selectedMember ? (
+            {selectedMember ? (
               <div className="text-secondary small mt-3">
-                Mostrando disponibilidad para{" "}
-                <strong>{selectedMember.nombre}</strong>.
+                {selectedSession?.nombreSesion ? (
+                  <>
+                    Mostrando disponibilidad para{" "}
+                    <strong>{formatMemberLabel(selectedMember)}</strong> ({
+                    selectedSession.nombreSesion}).
+                  </>
+                ) : (
+                  <>
+                    Mostrando disponibilidad para{" "}
+                    <strong>{formatMemberLabel(selectedMember)}</strong>.
+                  </>
+                )}
               </div>
             ) : null}
           </div>
