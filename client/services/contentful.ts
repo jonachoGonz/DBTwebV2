@@ -10,6 +10,7 @@ import type {
   OurSpaceSlide,
   PaginaInicioContent,
   ServicioItem,
+  TipoSesion,
 } from "@/types/contentful";
 
 type PaginaInicioFields = {
@@ -102,6 +103,7 @@ type EquipoMiembroFields = {
   linkedinUrl?: unknown;
   instagramUrl?: unknown;
   agendaUrl?: unknown;
+  sesionesDisponibles?: unknown;
 };
 
 type EquipoMiembroSkeleton = EntrySkeletonType<
@@ -213,12 +215,38 @@ function mapServicioItem(entry: Entry<ServicioItemSkeleton>): ServicioItem {
   };
 }
 
+type TipoSesionFields = {
+  nombreSesion?: unknown;
+  sesionEmbedCode?: unknown;
+};
+
+type TipoSesionSkeleton = EntrySkeletonType<TipoSesionFields, "tipoSesion">;
+
+function mapTipoSesion(entry: Entry<TipoSesionSkeleton>): TipoSesion {
+  const fields = entry.fields as any;
+
+  return {
+    nombreSesion:
+      readString(fields.nombreSesion || fields.nombre || fields.name) ?? "",
+    sesionEmbedCode:
+      readString(fields.sesionEmbedCode || fields.embedCode || fields.codigoEmbed) ??
+      "",
+  };
+}
+
 function mapEquipoMiembro(entry: Entry<EquipoMiembroSkeleton>): EquipoMiembro {
   const fields = entry.fields as any;
   const imageAsset = (fields.imagen ||
     fields.image ||
     fields.foto) as unknown as Asset | undefined;
   const { url, alt } = readAssetUrl(imageAsset);
+
+  const rawSesionesDisponibles = fields.sesionesDisponibles as unknown;
+  const sesionesDisponibles = Array.isArray(rawSesionesDisponibles)
+    ? (
+        rawSesionesDisponibles.filter(isEntryLike) as Entry<TipoSesionSkeleton>[]
+      ).map((sesion) => mapTipoSesion(sesion))
+    : undefined;
 
   return {
     nombre: readString(fields.nombre || fields.name) ?? "",
@@ -238,6 +266,7 @@ function mapEquipoMiembro(entry: Entry<EquipoMiembroSkeleton>): EquipoMiembro {
     agendaUrl: readString(
       fields.agendaUrl || fields.bookingUrl || fields.agendarUrl,
     ),
+    sesionesDisponibles,
   };
 }
 
@@ -435,7 +464,7 @@ export async function fetchPaginaInicio(): Promise<PaginaInicioContent | null> {
       client.getEntries<PaginaInicioSkeleton>({
         content_type: "5Ey3sNNCbytnoyjC4OmlNy",
         limit: 1,
-        include: 2,
+        include: 3,
       }),
       timeoutPromise,
     ])) as any;
